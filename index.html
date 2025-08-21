@@ -1,403 +1,453 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Interativo da Saboaria Artesanal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Warm Neutrals & Subtle Earth Tones -->
-    <!-- Application Structure Plan: A thematic, single-page application designed for progressive learning and quick reference. The structure flows from foundational safety to advanced formulation, allowing users to either follow a linear path or jump directly to a topic of interest via the sticky navigation. Key interactions include tabbed content for detailed exploration without overwhelming the user, an interactive chart for comparing ingredients, and collapsible sections for recipes and troubleshooting. This structure was chosen to make a dense, technical report feel accessible and engaging, prioritizing user experience and knowledge retention over the original document's linear format. -->
-    <!-- Visualization & Content Choices: 
-    - Report Info: Oil/Fat Properties Table -> Goal: Compare -> Viz/Presentation: Interactive Radar Chart (Chart.js) -> Interaction: User can hover to see specific values for each oil's properties (Hardness, Cleansing, Conditioning, etc.). Justification: A radar chart is excellent for comparing multiple quantitative properties across different items simultaneously, offering a quick, holistic visual summary that is far more intuitive than a static table. Library: Chart.js on Canvas.
-    - Report Info: Safety Protocols -> Goal: Inform & Emphasize -> Presentation: Icon-driven cards and highlighted text blocks -> Interaction: Simple, clear visual hierarchy. Justification: Critical safety information must be easily scannable and memorable. Using icons and strong typography breaks up dense text and draws immediate attention to key warnings. Method: HTML/CSS with Tailwind.
-    - Report Info: Recipes -> Goal: Guide -> Presentation: Step-by-step collapsible accordions -> Interaction: Users click to expand each step, revealing details. Justification: This keeps the interface clean and allows users to focus on one step at a time, reducing cognitive load during the practical application of the recipe. Method: HTML/CSS/JS.
-    - Report Info: Saponification Process -> Goal: Explain -> Presentation: Numbered list with visual cues -> Interaction: Static but clearly sequenced. Justification: A linear, step-by-step explanation is most effective for a chemical process. Method: HTML/CSS.
-    - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #FDFBF8;
-            color: #4A4A4A;
-        }
-        h1, h2, h3 {
-            font-family: 'Playfair Display', serif;
-        }
-        .nav-link {
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        .nav-link:after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #D4A373;
-            transition: width 0.3s ease;
-        }
-        .nav-link.active:after, .nav-link:hover:after {
-            width: 100%;
-        }
-        .btn-primary {
-            background-color: #D4A373;
-            color: #FEFDFB;
-            transition: background-color 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #BF9264;
-        }
-        .section-card {
-            background-color: #FFFFFF;
-            border: 1px solid #EAE0D5;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 50vh;
-            max-height: 500px;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Interativo da Saboaria Artesanal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #D4A373;
+            transition: width 0.3s ease;
+        }
+        .nav-link.active:after, .nav-link:hover:after {
+            width: 100%;
+        }
+        .btn-primary {
+            background-color: #D4A373;
+            color: #FEFDFB;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #BF9264;
+        }
+        .section-card {
+            background-color: #FFFFFF;
+            border: 1px solid #EAE0D5;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-radius: 0.75rem;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 500px;
+            }
+        }
+        .rotate-180 {
+            transform: rotate(180deg);
+        }
+        .recipe-badge {
+            background-color: #D4A373;
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+        /* Melhorias para o accordion */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        .accordion-open .accordion-content {
+            max-height: 2000px;
+        }
+        /* Melhorias para a navegação mobile */
+        #mobile-menu {
+            transition: all 0.3s ease;
+        }
+    </style>
 </head>
 <body class="antialiased">
 
-    <header class="sticky top-0 bg-white/80 backdrop-blur-lg z-50 shadow-sm">
-        <nav class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-[#4A4A4A]">Saboaria Artesanal</h1>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#seguranca" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Segurança</a>
-                    <a href="#quimica" class="nav-link text-gray-600 hover:text-gray-900 font-medium">A Ciência</a>
-                    <a href="#ingredientes" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Ingredientes</a>
-                    <a href="#receitas" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Receitas</a>
-                    <a href="#problemas" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Soluções</a>
-                </div>
-                <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                </button>
-            </div>
-            <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2">
-                <a href="#seguranca" class="block nav-link text-gray-600 hover:text-gray-900 font-medium">Segurança</a>
-                <a href="#quimica" class="block nav-link text-gray-600 hover:text-gray-900 font-medium">A Ciência</a>
-                <a href="#ingredientes" class="block nav-link text-gray-600 hover:text-gray-900 font-medium">Ingredientes</a>
-                <a href="#receitas" class="block nav-link text-gray-600 hover:text-gray-900 font-medium">Receitas</a>
-                <a href="#problemas" class="block nav-link text-gray-600 hover:text-gray-900 font-medium">Soluções</a>
-            </div>
-        </nav>
-    </header>
+    <header class="sticky top-0 bg-white/95 backdrop-blur-lg z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-[#4A4A4A]">Saboaria Artesanal</h1>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#seguranca" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Segurança</a>
+                    <a href="#quimica" class="nav-link text-gray-600 hover:text-gray-900 font-medium">A Ciência</a>
+                    <a href="#ingredientes" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Ingredientes</a>
+                    <a href="#receitas" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Receitas</a>
+                    <a href="#problemas" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Soluções</a>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+            <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2 pb-2">
+                <a href="#seguranca" class="block py-2 nav-link text-gray-600 hover:text-gray-900 font-medium">Segurança</a>
+                <a href="#quimica" class="block py-2 nav-link text-gray-600 hover:text-gray-900 font-medium">A Ciência</a>
+                <a href="#ingredientes" class="block py-2 nav-link text-gray-600 hover:text-gray-900 font-medium">Ingredientes</a>
+                <a href="#receitas" class="block py-2 nav-link text-gray-600 hover:text-gray-900 font-medium">Receitas</a>
+                <a href="#problemas" class="block py-2 nav-link text-gray-600 hover:text-gray-900 font-medium">Soluções</a>
+            </div>
+        </nav>
+    </header>
 
-    <main class="container mx-auto px-6 py-12">
-        
-        <section id="hero" class="text-center mb-24">
-            <h1 class="text-5xl md:text-7xl font-bold text-gray-800 mb-4">A Alquimia em Suas Mãos</h1>
-            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Um guia interativo para transformar ingredientes simples na arte da saboaria. Explore a ciência, domine as técnicas e crie com segurança.</p>
-        </section>
+    <main class="container mx-auto px-4 md:px-6 py-12">
+        
+        <section id="hero" class="text-center mb-16 md:mb-24 px-4">
+            <h1 class="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-800 mb-6">A Alquimia em Suas Mãos</h1>
+            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">Um guia interativo para transformar ingredientes simples na arte da saboaria. Explore a ciência, domine as técnicas e crie com segurança.</p>
+        </section>
 
-        <section id="seguranca" class="mb-24 scroll-mt-24">
-            <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">Fundação Inegociável: Segurança Primeiro</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="section-card p-6 rounded-lg text-center">
-                    <div class="text-4xl mb-4">👁️</div>
-                    <h3 class="text-xl font-bold mb-2">Proteção Ocular</h3>
-                    <p class="text-gray-600">Óculos de proteção contra salpicos químicos são obrigatórios. Seus olhos são insubstituíveis.</p>
-                </div>
-                <div class="section-card p-6 rounded-lg text-center">
-                    <div class="text-4xl mb-4">🧤</div>
-                    <h3 class="text-xl font-bold mb-2">Proteção das Mãos</h3>
-                    <p class="text-gray-600">Use luvas resistentes a químicos (nitrilo ou neopreno). Luvas de cozinha não são suficientes.</p>
-                </div>
-                <div class="section-card p-6 rounded-lg text-center">
-                    <div class="text-4xl mb-4">👕</div>
-                    <h3 class="text-xl font-bold mb-2">Proteção Corporal</h3>
-                    <p class="text-gray-600">Mangas compridas, sapatos fechados e um avental de PVC criam uma barreira essencial.</p>
-                </div>
-                <div class="section-card p-6 rounded-lg text-center">
-                    <div class="text-4xl mb-4">🌬️</div>
-                    <h3 class="text-xl font-bold mb-2">Ambiente Ventilado</h3>
-                    <p class="text-gray-600">Trabalhe perto de uma janela aberta. Mantenha crianças e animais de estimação afastados.</p>
-                </div>
-            </div>
-            <div class="mt-12 bg-red-100 border-l-4 border-red-500 text-red-700 p-6 rounded-r-lg section-card">
-                <h3 class="text-2xl font-bold mb-2">A Regra de Ouro da Diluição</h3>
-                <p class="text-lg">Adicione **sempre** a soda cáustica ($NaOH$) à água, lentamente, e **nunca o contrário**. Inverter esta ordem pode causar uma reação violenta e perigosa.</p>
-            </div>
-        </section>
+        <section id="seguranca" class="mb-16 md:mb-24 scroll-mt-24 px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-800">Fundação Inegociável: Segurança Primeiro</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="section-card p-6 text-center">
+                    <div class="text-4xl mb-4">👁️</div>
+                    <h3 class="text-xl font-bold mb-2">Proteção Ocular</h3>
+                    <p class="text-gray-600 text-sm md:text-base">Óculos de proteção contra salpicos químicos são obrigatórios. Seus olhos são insubstituíveis.</p>
+                </div>
+                <div class="section-card p-6 text-center">
+                    <div class="text-4xl mb-4">🧤</div>
+                    <h3 class="text-xl font-bold mb-2">Proteção das Mãos</h3>
+                    <p class="text-gray-600 text-sm md:text-base">Use luvas resistentes a químicos (nitrilo ou neopreno). Luvas de cozinha não são suficientes.</p>
+                </div>
+                <div class="section-card p-6 text-center">
+                    <div class="text-4xl mb-4">👕</div>
+                    <h3 class="text-xl font-bold mb-2">Proteção Corporal</h3>
+                    <p class="text-gray-600 text-sm md:text-base">Mangas compridas, sapatos fechados e um avental de PVC criam uma barreira essencial.</p>
+                </div>
+                <div class="section-card p-6 text-center">
+                    <div class="text-4xl mb-4">🌬️</div>
+                    <h3 class="text-xl font-bold mb-2">Ambiente Ventilado</h3>
+                    <p class="text-gray-600 text-sm md:text-base">Trabalhe perto de uma janela aberta. Mantenha crianças e animais de estimação afastados.</p>
+                </div>
+            </div>
+            <div class="mt-8 md:mt-12 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 md:p-6 rounded-r-lg section-card">
+                <h3 class="text-xl md:text-2xl font-bold mb-2">A Regra de Ouro da Diluição</h3>
+                <p class="text-base md:text-lg">Adicione <strong>sempre</strong> a soda cáustica (NaOH) à água, lentamente, e <strong>nunca o contrário</strong>. Inverter esta ordem pode causar uma reação violenta e perigosa.</p>
+            </div>
+        </section>
 
-        <section id="quimica" class="mb-24 scroll-mt-24">
-            <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">A Ciência por Trás do Sabão</h2>
-            <div class="section-card p-8 rounded-lg">
-                <p class="text-lg text-gray-600 mb-6">A saponificação é a reação química que transforma óleo e gordura numa barra de sabão. Uma base forte (soda cáustica) quebra as moléculas de gordura (triglicerídeos), criando dois novos produtos: sais de ácidos gordos (o sabão em si) e glicerina (um hidratante natural).</p>
-                <div class="bg-gray-50 p-6 rounded-lg border border-gray-200 text-center">
-                    <p class="text-xl font-mono text-gray-700">Triglicerídeo + 3 $NaOH$ → Glicerol + 3 Sabão</p>
-                </div>
-                <div class="mt-8 grid md:grid-cols-2 gap-8">
-                    <div>
-                        <h3 class="text-2xl font-bold mb-2 text-gray-800">O Ponto de "Traço"</h3>
-                        <p class="text-gray-600">Este é o momento mágico em que a mistura engrossa e a emulsão se torna estável. Ao levantar a colher, o líquido deixa um rasto visível na superfície. A partir daqui, a reação continuará por si só. É o ponto de não retorno.</p>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl font-bold mb-2 text-gray-800">O Processo de Cura</h3>
-                        <p class="text-gray-600">Após ir para o molde, o sabão precisa de 3 a 4 semanas para "curar". Neste período, a saponificação termina, neutralizando toda a soda, e o excesso de água evapora, resultando numa barra dura, suave e segura para a pele.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <section id="quimica" class="mb-16 md:mb-24 scroll-mt-24 px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-800">A Ciência por Trás do Sabão</h2>
+            <div class="section-card p-6 md:p-8 rounded-lg">
+                <p class="text-base md:text-lg text-gray-600 mb-6 leading-relaxed">A saponificação é a reação química que transforma óleo e gordura numa barra de sabão. Uma base forte (soda cáustica) quebra as moléculas de gordura (triglicerídeos), criando dois novos produtos: sais de ácidos gordos (o sabão em si) e glicerina (um hidratante natural).</p>
+                <div class="bg-gray-50 p-4 md:p-6 rounded-lg border border-gray-200 text-center">
+                    <p class="text-lg md:text-xl font-mono text-gray-700">Triglicerídeo + 3 NaOH → Glicerol + 3 Sabão</p>
+                </div>
+                <div class="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                    <div>
+                        <h3 class="text-xl md:text-2xl font-bold mb-2 text-gray-800">O Ponto de "Traço"</h3>
+                        <p class="text-gray-600 text-sm md:text-base leading-relaxed">Este é o momento mágico em que a mistura engrossa e a emulsão se torna estável. Ao levantar a colher, o líquido deixa um rasto visível na superfície. A partir daqui, a reação continuará por si só. É o ponto de não retorno.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl md:text-2xl font-bold mb-2 text-gray-800">O Processo de Cura</h3>
+                        <p class="text-gray-600 text-sm md:text-base leading-relaxed">Após ir para o molde, o sabão precisa de 3 a 4 semanas para "curar". Neste período, a saponificação termina, neutralizando toda a soda, e o excesso de água evapora, resultando numa barra dura, suave e segura para a pele.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <section id="ingredientes" class="mb-24 scroll-mt-24">
-            <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">Guia Interativo de Ingredientes</h2>
-            <p class="text-center text-lg text-gray-600 max-w-3xl mx-auto mb-12">Cada óleo e gordura confere propriedades únicas ao sabão. O segredo de uma boa receita está no equilíbrio. Use o gráfico abaixo para explorar como diferentes ingredientes afetam as características da barra final.</p>
-            <div class="section-card p-8 rounded-lg">
-                 <div class="chart-container">
-                    <canvas id="oilPropertiesChart"></canvas>
-                </div>
-            </div>
-        </section>
-        
-        <section id="receitas" class="mb-24 scroll-mt-24">
-            <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">Receitas para Começar a Criar</h2>
-            <div class="space-y-4 max-w-4xl mx-auto" id="recipes-accordion">
-            </div>
-        </section>
+        <section id="ingredientes" class="mb-16 md:mb-24 scroll-mt-24 px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-800">Guia Interativo de Ingredientes</h2>
+            <p class="text-center text-base md:text-lg text-gray-600 max-w-3xl mx-auto mb-8 md:mb-12 leading-relaxed">Cada óleo e gordura confere propriedades únicas ao sabão. O segredo de uma boa receita está no equilíbrio. Use o gráfico abaixo para explorar como diferentes ingredientes afetam as características da barra final.</p>
+            <div class="section-card p-4 md:p-6 rounded-lg">
+                 <div class="chart-container">
+                    <canvas id="oilPropertiesChart"></canvas>
+                </div>
+            </div>
+        </section>
+        
+        <section id="receitas" class="mb-16 md:mb-24 scroll-mt-24 px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-800">Receitas para Começar a Criar</h2>
+            <div class="space-y-4 max-w-4xl mx-auto" id="recipes-accordion">
+                <!-- Conteúdo gerado por JavaScript -->
+            </div>
+        </section>
 
-        <section id="problemas" class="scroll-mt-24">
-            <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">Diagnóstico e Soluções</h2>
-             <div class="space-y-4 max-w-4xl mx-auto" id="troubleshooting-accordion">
-            </div>
-        </section>
+        <section id="problemas" class="scroll-mt-24 px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-800">Diagnóstico e Soluções</h2>
+             <div class="space-y-4 max-w-4xl mx-auto" id="troubleshooting-accordion">
+                <!-- Conteúdo gerado por JavaScript -->
+            </div>
+        </section>
 
-    </main>
+    </main>
 
-    <footer class="bg-white mt-24 border-t">
-        <div class="container mx-auto px-6 py-8 text-center text-gray-500">
-            <p>&copy; 2025 Portal da Saboaria Artesanal. Crie com conhecimento e segurança.</p>
-        </div>
-    </footer>
+    <footer class="bg-white mt-16 md:mt-24 border-t">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-500">
+            <p>&copy; 2025 Portal da Saboaria Artesanal. Crie com conhecimento e segurança.</p>
+        </div>
+    </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
 
-            mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
 
-            const navLinks = document.querySelectorAll('.nav-link');
-            const sections = document.querySelectorAll('section[id]');
-            
-            function setActiveLink() {
-                let index = sections.length;
-                while(--index && window.scrollY + 100 < sections[index].offsetTop) {}
-                
-                navLinks.forEach((link) => link.classList.remove('active'));
-                
-                const activeLink = document.querySelector(`.nav-link[href="#${sections[index].id}"]`);
-                if(activeLink) {
-                    activeLink.classList.add('active');
-                }
-            }
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section[id]');
+            
+            function setActiveLink() {
+                let index = sections.length;
+                while(--index && window.scrollY + 100 < sections[index].offsetTop) {}
+                
+                navLinks.forEach((link) => link.classList.remove('active'));
+                
+                const activeLink = document.querySelector(`.nav-link[href="#${sections[index].id}"]`);
+                if(activeLink) {
+                    activeLink.classList.add('active');
+                }
+            }
 
-            setActiveLink();
-            window.addEventListener('scroll', setActiveLink);
+            setActiveLink();
+            window.addEventListener('scroll', setActiveLink);
 
-            navLinks.forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    mobileMenu.classList.add('hidden');
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                });
-            });
+            navLinks.forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    mobileMenu.classList.add('hidden');
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
 
-            const oilData = {
-                labels: ['Dureza', 'Limpeza', 'Condicionamento', 'Espuma Borbulhante', 'Espuma Cremosa'],
-                datasets: [
-                    { label: 'Óleo de Coco', data: [9, 9, 1, 10, 2], fill: true, backgroundColor: 'rgba(255, 99, 132, 0.2)', borderColor: 'rgb(255, 99, 132)', pointBackgroundColor: 'rgb(255, 99, 132)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(255, 99, 132)' },
-                    { label: 'Azeite de Oliva', data: [1, 1, 9, 1, 8], fill: true, backgroundColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgb(75, 192, 192)', pointBackgroundColor: 'rgb(75, 192, 192)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(75, 192, 192)' },
-                    { label: 'Óleo de Palma', data: [8, 5, 5, 2, 9], fill: true, backgroundColor: 'rgba(255, 205, 86, 0.2)', borderColor: 'rgb(255, 205, 86)', pointBackgroundColor: 'rgb(255, 205, 86)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(255, 205, 86)' },
-                    { label: 'Banha de Porco', data: [8, 5, 8, 2, 8], fill: true, backgroundColor: 'rgba(201, 203, 207, 0.2)', borderColor: 'rgb(201, 203, 207)', pointBackgroundColor: 'rgb(201, 203, 207)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(201, 203, 207)' },
-                    { label: 'Manteiga de Karité', data: [5, 2, 9, 2, 5], fill: true, backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgb(54, 162, 235)', pointBackgroundColor: 'rgb(54, 162, 235)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(54, 162, 235)' }
-                ]
-            };
+            const oilData = {
+                labels: ['Dureza', 'Limpeza', 'Condicionamento', 'Espuma Borbulhante', 'Espuma Cremosa'],
+                datasets: [
+                    { label: 'Óleo de Coco', data: [9, 9, 1, 10, 2], fill: true, backgroundColor: 'rgba(255, 99, 132, 0.2)', borderColor: 'rgb(255, 99, 132)', pointBackgroundColor: 'rgb(255, 99, 132)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(255, 99, 132)' },
+                    { label: 'Azeite de Oliva', data: [1, 1, 9, 1, 8], fill: true, backgroundColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgb(75, 192, 192)', pointBackgroundColor: 'rgb(75, 192, 192)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(75, 192, 192)' },
+                    { label: 'Óleo de Palma', data: [8, 5, 5, 2, 9], fill: true, backgroundColor: 'rgba(255, 205, 86, 0.2)', borderColor: 'rgb(255, 205, 86)', pointBackgroundColor: 'rgb(255, 205, 86)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(255, 205, 86)' },
+                    { label: 'Banha de Porco', data: [8, 5, 8, 2, 8], fill: true, backgroundColor: 'rgba(201, 203, 207, 0.2)', borderColor: 'rgb(201, 203, 207)', pointBackgroundColor: 'rgb(201, 203, 207)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(201, 203, 207)' },
+                    { label: 'Manteiga de Karité', data: [5, 2, 9, 2, 5], fill: true, backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgb(54, 162, 235)', pointBackgroundColor: 'rgb(54, 162, 235)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(54, 162, 235)' }
+                ]
+            };
 
-            const chartCtx = document.getElementById('oilPropertiesChart').getContext('2d');
-            const oilPropertiesChart = new Chart(chartCtx, {
-                type: 'radar',
-                data: oilData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    elements: { line: { borderWidth: 3 } },
-                    scales: {
-                        r: {
-                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
-                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
-                            pointLabels: { font: { size: 14 }, color: '#4A4A4A' },
-                            ticks: { backdropColor: 'transparent', stepSize: 2, font: { size: 12 } },
-                            min: 0,
-                            max: 10
-                        }
-                    },
-                    plugins: {
-                        legend: { position: 'top', labels: { font: { size: 14 } } },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) { label += ': '; }
-                                    if (context.parsed.r !== null) { label += context.parsed.r.toFixed(1) + ' / 10'; }
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-            
-            const recipes = [
-                {
-                    title: "O Pioneiro: Sabão Básico de Óleo de Cozinha",
-                    type: "Processo a Frio",
-                    description: "Perfeito para limpeza geral, esta é a receita ideal para iniciantes entenderem o processo de saponificação.",
-                    content: `
-                        <h4 class="font-bold text-lg mb-2">Ingredientes:</h4>
-                        <ul class="list-disc list-inside mb-4 text-gray-600">
-                            <li>4 L de óleo de cozinha usado (bem coado)</li>
-                            <li>240 g de soda cáustica ($NaOH$) 90-99%</li>
-                            <li>200 ml de água fria</li>
-                        </ul>
-                        <h4 class="font-bold text-lg mb-2">Passo a Passo:</h4>
-                        <ol class="list-decimal list-inside space-y-2 text-gray-600">
-                            <li><strong>Preparar a Lixívia:</strong> Com todo o EPI, num local ventilado, adicione LENTAMENTE a soda à água. Mexa até dissolver. A mistura aquecerá. Deixe arrefecer por 15-20 minutos.</li>
-                            <li><strong>Unir os Ingredientes:</strong> Despeje o óleo sobre a solução de soda arrefecida.</li>
-                            <li><strong>Atingir o Traço:</strong> Misture vigorosamente (com mixer ou manualmente) por 20-40 minutos até atingir a consistência de mingau (ponto de traço).</li>
-                            <li><strong>Moldar:</strong> Despeje a massa em formas forradas e cubra com um pano.</li>
-                            <li><strong>Descansar e Cortar:</strong> Deixe endurecer por 24-48 horas, desenforme e corte as barras.</li>
-                            <li><strong>Curar:</strong> Deixe as barras em local seco e arejado por 3 a 4 semanas antes de usar. Este passo é crucial para a segurança!</li>
-                        </ol>
-                    `
-                },
-                {
-                    title: "Toque de Luxo: Sabão Glicerinado",
-                    type: "Processo a Quente",
-                    description: "Uma receita que utiliza álcool e açúcar para criar uma barra translúcida e extra-hidratante.",
-                    content: `
-                        <h4 class="font-bold text-lg mb-2">Ingredientes:</h4>
-                        <ul class="list-disc list-inside mb-4 text-gray-600">
-                            <li>1 L de óleo de cozinha usado (coado)</li>
-                            <li>6 colheres de sopa de soda cáustica</li>
-                            <li>1 L de água</li>
-                            <li>800 ml de etanol (álcool de cereais)</li>
-                            <li>600 g de açúcar cristal</li>
-                        </ul>
-                        <h4 class="font-bold text-lg mb-2">Passo a Passo:</h4>
-                        <ol class="list-decimal list-inside space-y-2 text-gray-600">
-                            <li><strong>Preparar a Lixívia:</strong> Siga o passo 1 da receita anterior.</li>
-                            <li><strong>União Rápida:</strong> Adicione o óleo e o etanol à lixívia. O álcool acelera a reação, atingindo o traço rapidamente.</li>
-                            <li><strong>Calda de Açúcar:</strong> Numa panela separada, dissolva o açúcar num pouco de água e aqueça até formar uma calda.</li>
-                            <li><strong>Incorporar:</strong> Adicione a calda quente à mistura de sabão, mexendo bem.</li>
-                            <li><strong>Moldar e Curar:</strong> Despeje rapidamente nas formas. O processo de cura de 3 a 4 semanas continua a ser essencial.</li>
-                        </ol>
-                        <p class="mt-4 text-sm text-yellow-700 bg-yellow-100 p-2 rounded"><strong>Atenção:</strong> O uso de álcool de combustível de posto é perigoso e inadequado. Utilize apenas álcool de cereais de grau cosmético.</p>
-                    `
-                },
-                {
-                    title: "Abraço da Natureza: Erva-Doce e Limão",
-                    type: "Melt and Pour (Derreter e Verter)",
-                    description: "Um método seguro e sem manuseio de soda, perfeito para focar na criatividade, aromas e texturas.",
-                     content: `
-                        <h4 class="font-bold text-lg mb-2">Ingredientes:</h4>
-                        <ul class="list-disc list-inside mb-4 text-gray-600">
-                            <li>1 barra de sabão de coco de boa qualidade</li>
-                            <li>1 L de água</li>
-                            <li>50 g de erva-doce</li>
-                            <li>1 colher de sopa de sal</li>
-                            <li>Casca de 1 limão</li>
-                        </ul>
-                        <h4 class="font-bold text-lg mb-2">Passo a Passo:</h4>
-                        <ol class="list-decimal list-inside space-y-2 text-gray-600">
-                            <li><strong>Ralar o Sabão:</strong> Rale a barra de sabão de coco.</li>
-                            <li><strong>Fazer a Infusão:</strong> Ferva a água, adicione a erva-doce e a casca de limão. Desligue o fogo e deixe em infusão por 15 minutos.</li>
-                            <li><strong>Dissolver:</strong> Coe o líquido, volte ao fogo baixo, adicione o sabão ralado e o sal. Mexa até dissolver completamente.</li>
-                            <li><strong>Moldar:</strong> Despeje nas formas e deixe endurecer. Não necessita de um longo período de cura.</li>
-                        </ol>
-                    `
-                }
-            ];
+            const chartCtx = document.getElementById('oilPropertiesChart').getContext('2d');
+            const oilPropertiesChart = new Chart(chartCtx, {
+                type: 'radar',
+                data: oilData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: { line: { borderWidth: 3 } },
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                            pointLabels: { 
+                                font: { size: 14, family: "'Inter', sans-serif" }, 
+                                color: '#4A4A4A' 
+                            },
+                            ticks: { 
+                                backdropColor: 'transparent', 
+                                stepSize: 2, 
+                                font: { size: 12, family: "'Inter', sans-serif" },
+                                color: '#4A4A4A'
+                            },
+                            min: 0,
+                            max: 10
+                        }
+                    },
+                    plugins: {
+                        legend: { 
+                            position: 'top', 
+                            labels: { 
+                                font: { size: 14, family: "'Inter', sans-serif" },
+                                color: '#4A4A4A'
+                            } 
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#4A4A4A',
+                            bodyColor: '#4A4A4A',
+                            borderColor: '#EAE0D5',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.r !== null) { label += context.parsed.r.toFixed(1) + ' / 10'; }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            const recipes = [
+                {
+                    title: "O Pioneiro: Sabão Básico de Óleo de Cozinha",
+                    type: "Processo a Frio",
+                    description: "Perfeito para limpeza geral, esta é a receita ideal para iniciantes entenderem o processo de saponificação.",
+                    content: `
+                        <h4 class="font-bold text-lg mb-2">Ingredientes:</h4>
+                        <ul class="list-disc list-inside mb-4 text-gray-600 space-y-1">
+                            <li>4 L de óleo de cozinha usado (bem coado)</li>
+                            <li>240 g de soda cáustica (NaOH) 90-99%</li>
+                            <li>200 ml de água fria</li>
+                        </ul>
+                        <h4 class="font-bold text-lg mb-2">Passo a Passo:</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                            <li><strong>Preparar a Lixívia:</strong> Com todo o EPI, num local ventilado, adicione LENTAMENTE a soda à água. Mexa até dissolver. A mistura aquecerá. Deixe arrefecer por 15-20 minutos.</li>
+                            <li><strong>Unir os Ingredientes:</strong> Despeje o óleo sobre a solução de soda arrefecida.</li>
+                            <li><strong>Atingir o Traço:</strong> Misture vigorosamente (com mixer ou manualmente) por 20-40 minutos até atingir a consistência de mingau (ponto de traço).</li>
+                            <li><strong>Moldar:</strong> Despeje a massa em formas forradas e cubra com um pano.</li>
+                            <li><strong>Descansar e Cortar:</strong> Deixe endurecer por 24-48 horas, desenforme e corte as barras.</li>
+                            <li><strong>Curar:</strong> Deixe as barras em local seco e arejado por 3 a 4 semanas antes de usar. Este passo é crucial para a segurança!</li>
+                        </ol>
+                    `
+                },
+                {
+                    title: "Toque de Luxo: Sabão Glicerinado",
+                    type: "Processo a Quente",
+                    description: "Uma receita que utiliza álcool e açúcar para criar uma barra translúcida e extra-hidratante.",
+                    content: `
+                        <h4 class="font-bold text-lg mb-2">Ingredientes:</h4>
+                        <ul class="list-disc list-inside mb-4 text-gray-600 space-y-1">
+                            <li>1 L de óleo de cozinha usado (coado)</li>
+                            <li>6 colheres de sopa de soda cáustica</li>
+                            <li>1 L de água</li>
+                            <li>800 ml de etanol (álcool de cereais)</li>
+                            <li>600 g de açúcar cristal</li>
+                        </ul>
+                        <h4 class="font-bold text-lg mb-2">Passo a Passo:</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                            <li><strong>Preparar a Lixívia:</strong> Siga o passo 1 da receita anterior.</li>
+                            <li><strong>União Rápida:</strong> Adicione o óleo e o etanol à lixívia. O álcool acelera a reação, atingindo o traço rapidamente.</li>
+                            <li><strong>Calda de Açúcar:</strong> Numa panela separada, dissolva o açúcar num pouco de água e aqueça até formar uma calda.</li>
+                            <li><strong>Incorporar:</strong> Adicione a calda quente à mistura de sabão, mexendo bem.</li>
+                            <li><strong>Moldar e Curar:</strong> Despeje rapidamente nas formas. O processo de cura de 3 a 4 semanas continua a ser essencial.</li>
+                        </ol>
+                        <p class="mt-4 text-sm text-yellow-700 bg-yellow-100 p-2 rounded"><strong>Atenção:</strong> O uso de álcool de combustível de posto é perigoso e inadequado. Utilize apenas álcool de cereais de grau cosmético.</p>
+                    `
+                },
+                {
+                    title: "Abraço da Natureza: Erva-Doce e Limão",
+                    type: "Melt and Pour (Derreter e Verter)",
+                    description: "Um método seguro e sem manuseio de soda, perfeito para focar na criatividade, aromas e texturas.",
+                     content: `
+                        <h4 class="font-bold text-lg mb-2">Ingredientes:</h4>
+                        <ul class="list-disc list-inside mb-4 text-gray-600 space-y-1">
+                            <li>1 barra de sabão de coco de boa qualidade</li>
+                            <li>1 L de água</li>
+                            <li>50 g de erva-doce</li>
+                            <li>1 colher de sopa de sal</li>
+                            <li>Casca de 1 limão</li>
+                        </ul>
+                        <h4 class="font-bold text-lg mb-2">Passo a Passo:</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                            <li><strong>Ralar o Sabão:</strong> Rale a barra de sabão de coco.</li>
+                            <li><strong>Fazer a Infusão:</strong> Ferva a água, adicione a erva-doce e a casca de limão. Desligue o fogo e deixe em infusão por 15 minutos.</li>
+                            <li><strong>Dissolver:</strong> Coe o líquido, volte ao fogo baixo, adicione o sabão ralado e o sal. Mexa até dissolver completamente.</li>
+                            <li><strong>Moldar:</strong> Despeje nas formas e deixe endurecer. Não necessita de um longo período de cura.</li>
+                        </ol>
+                    `
+                }
+            ];
 
-            const troubleshootingData = [
-                {
-                    title: "O sabão não endurece, está mole ou oleoso.",
-                    content: "<strong>Causa Provável:</strong> A causa mais comum é um erro de cálculo ou medição, resultando em soda cáustica insuficiente para a quantidade de óleo. Todas as medições devem ser feitas por peso (gramas) numa balança digital, não por volume.<br><br><strong>Solução (Reprocessamento):</strong> Rale o sabão mole, coloque numa panela em lume muito baixo (banho-maria é ideal) e cozinhe suavemente, mexendo ocasionalmente, até atingir uma consistência de gel. Este 'processo a quente' forçará a conclusão da saponificação. Depois, verta novamente no molde."
-                },
-                {
-                    title: "A mistura separou-se em camadas de óleo e líquido.",
-                    content: "<strong>Causa Provável:</strong> A mistura foi vertida no molde antes de atingir um 'traço' estável. A emulsão não se formou corretamente.<br><br><strong>Solução:</strong> Volte a colocar toda a mistura no recipiente original e continue a mexer vigorosamente com um mixer ou batedeira até que um traço espesso e estável seja alcançado. Depois, pode voltar a verter no molde."
-                },
-                {
-                    title: "Apareceu uma película branca e poeirenta no topo do sabão.",
-                    content: "<strong>Diagnóstico:</strong> Isto é 'cinza de soda' (carbonato de sódio), formada quando a soda na superfície reage com o dióxido de carbono do ar. É inofensiva e puramente estética.<br><br><strong>Prevenção/Solução:</strong> Pode ser evitada cobrindo o molde com película aderente nas primeiras 24 horas. Para remover, pode raspar suavemente ou passar um pano húmido sobre a barra já curada."
-                }
-            ];
+            const troubleshootingData = [
+                {
+                    title: "O sabão não endurece, está mole ou oleoso.",
+                    content: "<strong>Causa Provável:</strong> A causa mais comum é um erro de cálculo ou medição, resultando em soda cáustica insuficiente para a quantidade de óleo. Todas as medições devem ser feitas por peso (gramas) numa balança digital, não por volume.<br><br><strong>Solução (Reprocessamento):</strong> Rale o sabão mole, coloque numa panela em lume muito baixo (banho-maria é ideal) e cozinhe suavemente, mexendo ocasionalmente, até atingir uma consistência de gel. Este 'processo a quente' forçará a conclusão da saponificação. Depois, verta novamente no molde."
+                },
+                {
+                    title: "A mistura separou-se em camadas de óleo e líquido.",
+                    content: "<strong>Causa Provável:</strong> A mistura foi vertida no molde antes de atingir um 'traço' estável. A emulsão não se formou corretamente.<br><br><strong>Solução:</strong> Volte a colocar toda a mistura no recipiente original e continue a mexer vigorosamente com um mixer ou batedeira até que um traço espesso e estável seja alcançado. Depois, pode voltar a verter no molde."
+                },
+                {
+                    title: "Apareceu uma película branca e poeirenta no topo do sabão.",
+                    content: "<strong>Diagnóstico:</strong> Isto é 'cinza de soda' (carbonato de sódio), formada quando a soda na superfície reage com o dióxido de carbono do ar. É inofensiva e puramente estética.<br><br><strong>Prevenção/Solução:</strong> Pode ser evitada cobrindo o molde com película aderente nas primeiras 24 horas. Para remover, pode raspar suavemente ou passar um pano húmido sobre a barra já curada."
+                }
+            ];
 
-            function createAccordion(containerId, data) {
-                const container = document.getElementById(containerId);
-                data.forEach((item, index) => {
-                    const div = document.createElement('div');
-                    div.className = 'section-card rounded-lg overflow-hidden';
-                    div.innerHTML = `
-                        <button class="w-full text-left p-6 flex justify-between items-center focus:outline-none">
-                            <div>
-                                <h3 class="text-xl font-bold text-gray-800">${item.title}</h3>
-                                ${item.type ? `<span class="text-sm font-medium text-white rounded-full px-3 py-1 mt-2 inline-block" style="background-color: #BF9264;">${item.type}</span>` : ''}
-                                ${item.description ? `<p class="text-gray-600 mt-2">${item.description}</p>` : ''}
-                            </div>
-                            <span class="transform transition-transform duration-300 text-2xl text-gray-500">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </span>
-                        </button>
-                        <div class="accordion-content max-h-0 overflow-hidden transition-max-height duration-500 ease-in-out">
-                            <div class="p-6 border-t border-gray-200">${item.content}</div>
-                        </div>
-                    `;
-                    container.appendChild(div);
-                });
+            function createAccordion(containerId, data, isRecipe = false) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = ''; // Limpar conteúdo existente
+                
+                data.forEach((item, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'section-card rounded-lg overflow-hidden accordion-item';
+                    div.innerHTML = `
+                        <button class="w-full text-left p-4 md:p-6 flex justify-between items-center focus:outline-none accordion-button">
+                            <div class="flex-1">
+                                <h3 class="text-lg md:text-xl font-bold text-gray-800">${item.title}</h3>
+                                ${isRecipe && item.type ? `<span class="recipe-badge">${item.type}</span>` : ''}
+                                ${item.description ? `<p class="text-gray-600 mt-2 text-sm md:text-base">${item.description}</p>` : ''}
+                            </div>
+                            <span class="ml-4 transform transition-transform duration-300 text-2xl text-gray-500 accordion-icon">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </span>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="p-4 md:p-6 border-t border-gray-200">${item.content}</div>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
 
-                container.addEventListener('click', function(e) {
-                    const button = e.target.closest('button');
-                    if (!button) return;
+                const items = container.querySelectorAll('.accordion-item');
+                items.forEach(item => {
+                    const button = item.querySelector('.accordion-button');
+                    const content = item.querySelector('.accordion-content');
+                    const icon = item.querySelector('.accordion-icon');
+                    
+                    button.addEventListener('click', () => {
+                        const isOpen = item.classList.contains('accordion-open');
+                        
+                        // Fecha todos os itens
+                        items.forEach(el => {
+                            el.classList.remove('accordion-open');
+                            el.querySelector('.accordion-content').style.maxHeight = '0';
+                            el.querySelector('.accordion-icon').classList.remove('rotate-180');
+                        });
+                        
+                        // Se não estava aberto, abre este
+                        if (!isOpen) {
+                            item.classList.add('accordion-open');
+                            content.style.maxHeight = content.scrollHeight + 'px';
+                            icon.classList.add('rotate-180');
+                        }
+                    });
+                });
+            }
+            
+            createAccordion('recipes-accordion', recipes, true);
+            createAccordion('troubleshooting-accordion', troubleshootingData);
 
-                    const content = button.nextElementSibling;
-                    const icon = button.querySelector('span');
-                    
-                    if (content.style.maxHeight && content.style.maxHeight !== '0px') {
-                        content.style.maxHeight = '0px';
-                        icon.classList.remove('rotate-180');
-                    } else {
-                        // Close all others
-                        container.querySelectorAll('.accordion-content').forEach(el => el.style.maxHeight = '0px');
-                        container.querySelectorAll('button span').forEach(el => el.classList.remove('rotate-180'));
-                        
-                        content.style.maxHeight = content.scrollHeight + 'px';
-                        icon.classList.add('rotate-180');
-                    }
-                });
-            }
-            
-            createAccordion('recipes-accordion', recipes);
-            createAccordion('troubleshooting-accordion', troubleshootingData);
-
-        });
-    </script>
+        });
+    </script>
 </body>
               </html>
