@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Portal Interativo da Saboaria Artesanal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -79,14 +79,36 @@
         .accordion-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.5s ease;
+            transition: max-height 0.5s ease, padding 0.5s ease;
+            padding: 0 1rem;
         }
         .accordion-open .accordion-content {
             max-height: 2000px;
+            padding: 1rem;
         }
         /* Melhorias para a navegação mobile */
         #mobile-menu {
             transition: all 0.3s ease;
+        }
+        /* Botão voltar ao topo */
+        #back-to-top {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            padding: 0.75rem;
+            border-radius: 9999px;
+            background-color: #D4A373;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.5rem;
+            display: none;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+        }
+        #back-to-top:hover {
+            background-color: #BF9264;
         }
     </style>
 </head>
@@ -103,8 +125,10 @@
                     <a href="#receitas" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Receitas</a>
                     <a href="#problemas" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Soluções</a>
                 </div>
-                <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none" aria-label="Abrir menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                 </button>
             </div>
             <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2 pb-2">
@@ -186,16 +210,12 @@
         
         <section id="receitas" class="mb-16 md:mb-24 scroll-mt-24 px-4">
             <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-800">Receitas para Começar a Criar</h2>
-            <div class="space-y-4 max-w-4xl mx-auto" id="recipes-accordion">
-                <!-- Conteúdo gerado por JavaScript -->
-            </div>
+            <div class="space-y-4 max-w-4xl mx-auto" id="recipes-accordion"></div>
         </section>
 
         <section id="problemas" class="scroll-mt-24 px-4">
             <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-800">Diagnóstico e Soluções</h2>
-             <div class="space-y-4 max-w-4xl mx-auto" id="troubleshooting-accordion">
-                <!-- Conteúdo gerado por JavaScript -->
-            </div>
+             <div class="space-y-4 max-w-4xl mx-auto" id="troubleshooting-accordion"></div>
         </section>
 
     </main>
@@ -206,15 +226,36 @@
         </div>
     </footer>
 
+    <button id="back-to-top" aria-label="Voltar ao topo">↑</button>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Menu Mobile
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
 
+            function setMenuState(open) {
+                if (open) {
+                    mobileMenu.classList.remove('hidden');
+                    localStorage.setItem('mobileMenuOpen', 'true');
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    localStorage.setItem('mobileMenuOpen', 'false');
+                }
+            }
+
             mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
+                const isOpen = !mobileMenu.classList.contains('hidden');
+                setMenuState(!isOpen);
             });
 
+            if (localStorage.getItem('mobileMenuOpen') === 'true') {
+                mobileMenu.classList.remove('hidden');
+            } else {
+                mobileMenu.classList.add('hidden');
+            }
+
+            // Links navegação
             const navLinks = document.querySelectorAll('.nav-link');
             const sections = document.querySelectorAll('section[id]');
             
@@ -243,6 +284,7 @@
                 });
             });
 
+            // Gráfico Radar (Chart.js)
             const oilData = {
                 labels: ['Dureza', 'Limpeza', 'Condicionamento', 'Espuma Borbulhante', 'Espuma Cremosa'],
                 datasets: [
@@ -358,7 +400,7 @@
                     title: "Abraço da Natureza: Erva-Doce e Limão",
                     type: "Melt and Pour (Derreter e Verter)",
                     description: "Um método seguro e sem manuseio de soda, perfeito para focar na criatividade, aromas e texturas.",
-                     content: `
+                    content: `
                         <h4 class="font-bold text-lg mb-2">Ingredientes:</h4>
                         <ul class="list-disc list-inside mb-4 text-gray-600 space-y-1">
                             <li>1 barra de sabão de coco de boa qualidade</li>
@@ -395,7 +437,7 @@
 
             function createAccordion(containerId, data, isRecipe = false) {
                 const container = document.getElementById(containerId);
-                container.innerHTML = ''; // Limpar conteúdo existente
+                container.innerHTML = '';
                 
                 data.forEach((item, index) => {
                     const div = document.createElement('div');
@@ -419,35 +461,57 @@
                 });
 
                 const items = container.querySelectorAll('.accordion-item');
-                items.forEach(item => {
+                const openIndex = localStorage.getItem(containerId + '-openIndex');
+
+                items.forEach((item, index) => {
                     const button = item.querySelector('.accordion-button');
                     const content = item.querySelector('.accordion-content');
                     const icon = item.querySelector('.accordion-icon');
+
+                    if (openIndex == index) {
+                        item.classList.add('accordion-open');
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                        icon.classList.add('rotate-180');
+                    }
                     
                     button.addEventListener('click', () => {
                         const isOpen = item.classList.contains('accordion-open');
                         
-                        // Fecha todos os itens
                         items.forEach(el => {
                             el.classList.remove('accordion-open');
                             el.querySelector('.accordion-content').style.maxHeight = '0';
                             el.querySelector('.accordion-icon').classList.remove('rotate-180');
                         });
                         
-                        // Se não estava aberto, abre este
                         if (!isOpen) {
                             item.classList.add('accordion-open');
                             content.style.maxHeight = content.scrollHeight + 'px';
                             icon.classList.add('rotate-180');
+                            localStorage.setItem(containerId + '-openIndex', index);
+                        } else {
+                            localStorage.removeItem(containerId + '-openIndex');
                         }
                     });
                 });
             }
-            
+
             createAccordion('recipes-accordion', recipes, true);
             createAccordion('troubleshooting-accordion', troubleshootingData);
 
+            const backToTop = document.getElementById('back-to-top');
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTop.style.display = 'block';
+                } else {
+                    backToTop.style.display = 'none';
+                }
+            });
+
+            backToTop.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
         });
     </script>
 </body>
-    </html>
+</html>
