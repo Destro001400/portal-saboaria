@@ -1,515 +1,584 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Portal Interativo da Saboaria Artesanal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sapone Sereno - A Arte do Sabão que Transforma seu Banho</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #FDFBF8;
-            color: #4A4A4A;
-            scroll-behavior: smooth;
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-        h1, h2, h3 {
-            font-family: 'Playfair Display', serif;
+
+        .floating-bubbles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
         }
-        .nav-link {
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        .nav-link:after {
-            content: '';
+
+        .bubble {
             position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #D4A373;
-            transition: width 0.3s ease;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 100%);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+            opacity: 0.6;
         }
-        .nav-link.active:after, .nav-link:hover:after {
-            width: 100%;
-        }
-        .btn-primary {
-            background-color: #D4A373;
-            color: #FEFDFB;
-            transition: background-color 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #BF9264;
-        }
-        .section-card {
-            background-color: #FFFFFF;
-            border: 1px solid #EAE0D5;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border-radius: 0.75rem;
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            margin-left: auto;
-            margin-right: auto;
-            height: 400px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 500px;
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-50vh) translateX(100px) scale(1);
+            }
+            90% {
+                opacity: 0.6;
             }
         }
-        .rotate-180 {
-            transform: rotate(180deg);
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
         }
-        .recipe-badge {
-            background-color: #D4A373;
-            color: white;
-            font-size: 0.75rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            display: inline-block;
-            margin-top: 0.5rem;
+
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            animation: slideDown 1s ease-out;
         }
-        /* Melhorias para o accordion */
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease, padding 0.5s ease;
-            padding: 0 1rem;
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
-        .accordion-open .accordion-content {
-            max-height: 2000px;
-            padding: 1rem;
-        }
-        /* Melhorias para a navegação mobile */
-        #mobile-menu {
-            transition: all 0.3s ease;
-        }
-        /* Botão voltar ao topo */
-        #back-to-top {
-            position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
-            padding: 0.75rem;
-            border-radius: 9999px;
-            background-color: #D4A373;
-            color: white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            cursor: pointer;
+
+        .logo {
+            font-size: 3.5em;
+            color: #764ba2;
+            margin-bottom: 10px;
             font-weight: bold;
-            font-size: 1.5rem;
-            display: none;
-            z-index: 1000;
-            transition: background-color 0.3s ease;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: pulse 3s infinite;
         }
-        #back-to-top:hover {
-            background-color: #BF9264;
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .tagline {
+            font-size: 1.3em;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        .hero-text {
+            font-size: 1.8em;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            animation: fadeIn 2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
+
+        .section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            transform: translateY(30px);
+            opacity: 0;
+            animation: slideUp 1s ease-out forwards;
+        }
+
+        .section:nth-child(2) { animation-delay: 0.2s; }
+        .section:nth-child(3) { animation-delay: 0.4s; }
+        .section:nth-child(4) { animation-delay: 0.6s; }
+        .section:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h2 {
+            color: #764ba2;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+            animation: expand 2s ease-out forwards;
+        }
+
+        @keyframes expand {
+            from {
+                width: 0;
+            }
+            to {
+                width: 60px;
+            }
+        }
+
+        .discovery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .discovery-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .discovery-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.6s ease;
+        }
+
+        .discovery-card:hover::before {
+            transform: scale(1);
+        }
+
+        .discovery-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .mystery-box {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            padding: 30px;
+            border-radius: 20px;
+            color: white;
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mystery-box::before {
+            content: '?';
+            position: absolute;
+            font-size: 200px;
+            opacity: 0.1;
+            right: -30px;
+            top: -50px;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .ingredient-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .ingredient {
+            background: white;
+            color: #764ba2;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .ingredient:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            background: #764ba2;
+            color: white;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 60px 40px;
+            border-radius: 30px;
+            margin-top: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,133.3C672,117,768,107,864,122.7C960,139,1056,181,1152,186.7C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            opacity: 0.3;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #764ba2;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .fun-fact {
+            background: #f8f9fa;
+            border-left: 5px solid #764ba2;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            position: relative;
+            animation: slideInLeft 1s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .testimonial {
+            font-style: italic;
+            font-size: 1.1em;
+            color: #555;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .testimonial::before {
+            content: '"';
+            font-size: 4em;
+            color: #764ba2;
+            opacity: 0.3;
+            position: absolute;
+            top: -10px;
+            left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5em;
+            }
+            .hero-text {
+                font-size: 1.4em;
+            }
+            h2 {
+                font-size: 1.8em;
+            }
         }
     </style>
 </head>
-<body class="antialiased">
-
-    <header class="sticky top-0 bg-white/95 backdrop-blur-lg z-50 shadow-sm">
-        <nav class="container mx-auto px-6 py-4">
-            <div class="flex items-center justify-between">
-                <h1 class="text-2xl font-bold text-[#4A4A4A]">Saboaria Artesanal</h1>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#seguranca" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Segurança</a>
-                    <a href="#quimica" class="nav-link text-gray-600 hover:text-gray-900 font-medium">A Ciência</a>
-                    <a href="#ingredientes" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Ingredientes</a>
-                    <a href="#receitas" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Receitas</a>
-                    <a href="#problemas" class="nav-link text-gray-600 hover:text-gray-900 font-medium">Soluções</a>
-                </div>
-                <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none" aria-label="Abrir menu">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                </button>
+<body>
+    <div class="floating-bubbles"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">Sapone Sereno</div>
+            <div class="tagline">✨ Onde a Magia Encontra a Limpeza ✨</div>
+            <div class="hero-text">
+                Imagine um sabão que não apenas limpa, mas <span class="highlight">transforma cada banho em uma experiência única</span>...
+                <br><br>
+                Um segredo guardado por gerações, agora revelado para você!
             </div>
-            <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-2 pb-2">
-                <a href="#seguranca" class="block py-2 nav-link text-gray-600 hover:text-gray-900 font-medium">Segurança</a>
-                <a href="#quimica" class="block py-2 nav-link text-gray-600 hover:text-gray-900 font-medium">A Ciência</a>
-                <a href="#ingredientes" class="block py-2 nav-link text-gray-600 hover:text-gray-900 font-medium">Ingredientes</a>
-                <a href="#receitas" class="block py-2 nav-link text-gray-600 hover:text-gray-900 font-medium">Receitas</a>
-                <a href="#problemas" class="block py-2 nav-link text-gray-600 hover:text-gray-900 font-medium">Soluções</a>
-            </div>
-        </nav>
-    </header>
+        </header>
 
-    <main class="container mx-auto px-4 md:px-6 py-12">
-        
-        <section id="hero" class="text-center mb-16 md:mb-24 px-4">
-            <h1 class="text-4xl md:text-5xl lg:text-7xl font-bold text-gray-800 mb-6">A Alquimia em Suas Mãos</h1>
-            <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">Um guia interativo para transformar ingredientes simples na arte da saboaria. Explore a ciência, domine as técnicas e crie com segurança.</p>
-        </section>
-
-        <section id="seguranca" class="mb-16 md:mb-24 scroll-mt-24 px-4">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-800">Fundação Inegociável: Segurança Primeiro</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="section-card p-6 text-center">
-                    <div class="text-4xl mb-4">👁️</div>
-                    <h3 class="text-xl font-bold mb-2">Proteção Ocular</h3>
-                    <p class="text-gray-600 text-sm md:text-base">Óculos de proteção contra salpicos químicos são obrigatórios. Seus olhos são insubstituíveis.</p>
+        <div class="section">
+            <h2>🌟 Uma Descoberta Fascinante!</h2>
+            <p style="font-size: 1.2em; line-height: 1.8; color: #555;">
+                Você sabia que existe um sabão capaz de despertar sensações que você nem sabia que existiam? 
+                O Sapone Sereno não é apenas um produto de limpeza - é uma <strong>revolução sensorial</strong> 
+                que está conquistando pessoas ao redor do mundo!
+            </p>
+            
+            <div class="discovery-grid">
+                <div class="discovery-card">
+                    <div class="icon">🌿</div>
+                    <h3>100% Natural</h3>
+                    <p>Ingredientes secretos da natureza que vão te surpreender!</p>
                 </div>
-                <div class="section-card p-6 text-center">
-                    <div class="text-4xl mb-4">🧤</div>
-                    <h3 class="text-xl font-bold mb-2">Proteção das Mãos</h3>
-                    <p class="text-gray-600 text-sm md:text-base">Use luvas resistentes a químicos (nitrilo ou neopreno). Luvas de cozinha não são suficientes.</p>
+                <div class="discovery-card">
+                    <div class="icon">💎</div>
+                    <h3>Fórmula Exclusiva</h3>
+                    <p>Uma receita que levou anos para ser aperfeiçoada</p>
                 </div>
-                <div class="section-card p-6 text-center">
-                    <div class="text-4xl mb-4">👕</div>
-                    <h3 class="text-xl font-bold mb-2">Proteção Corporal</h3>
-                    <p class="text-gray-600 text-sm md:text-base">Mangas compridas, sapatos fechados e um avental de PVC criam uma barreira essencial.</p>
-                </div>
-                <div class="section-card p-6 text-center">
-                    <div class="text-4xl mb-4">🌬️</div>
-                    <h3 class="text-xl font-bold mb-2">Ambiente Ventilado</h3>
-                    <p class="text-gray-600 text-sm md:text-base">Trabalhe perto de uma janela aberta. Mantenha crianças e animais de estimação afastados.</p>
+                <div class="discovery-card">
+                    <div class="icon">🌈</div>
+                    <h3>Cores que Hipnotizam</h3>
+                    <p>Cada barra é uma obra de arte única</p>
                 </div>
             </div>
-            <div class="mt-8 md:mt-12 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 md:p-6 rounded-r-lg section-card">
-                <h3 class="text-xl md:text-2xl font-bold mb-2">A Regra de Ouro da Diluição</h3>
-                <p class="text-base md:text-lg">Adicione <strong>sempre</strong> a soda cáustica (NaOH) à água, lentamente, e <strong>nunca o contrário</strong>. Inverter esta ordem pode causar uma reação violenta e perigosa.</p>
-            </div>
-        </section>
-
-        <section id="quimica" class="mb-16 md:mb-24 scroll-mt-24 px-4">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-800">A Ciência por Trás do Sabão</h2>
-            <div class="section-card p-6 md:p-8 rounded-lg">
-                <p class="text-base md:text-lg text-gray-600 mb-6 leading-relaxed">A saponificação é a reação química que transforma óleo e gordura numa barra de sabão. Uma base forte (soda cáustica) quebra as moléculas de gordura (triglicerídeos), criando dois novos produtos: sais de ácidos gordos (o sabão em si) e glicerina (um hidratante natural).</p>
-                <div class="bg-gray-50 p-4 md:p-6 rounded-lg border border-gray-200 text-center">
-                    <p class="text-lg md:text-xl font-mono text-gray-700">Triglicerídeo + 3 NaOH → Glicerol + 3 Sabão</p>
-                </div>
-                <div class="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                    <div>
-                        <h3 class="text-xl md:text-2xl font-bold mb-2 text-gray-800">O Ponto de "Traço"</h3>
-                        <p class="text-gray-600 text-sm md:text-base leading-relaxed">Este é o momento mágico em que a mistura engrossa e a emulsão se torna estável. Ao levantar a colher, o líquido deixa um rasto visível na superfície. A partir daqui, a reação continuará por si só. É o ponto de não retorno.</p>
-                    </div>
-                    <div>
-                        <h3 class="text-xl md:text-2xl font-bold mb-2 text-gray-800">O Processo de Cura</h3>
-                        <p class="text-gray-600 text-sm md:text-base leading-relaxed">Após ir para o molde, o sabão precisa de 3 a 4 semanas para "curar". Neste período, a saponificação termina, neutralizando toda a soda, e o excesso de água evapora, resultando numa barra dura, suave e segura para a pele.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="ingredientes" class="mb-16 md:mb-24 scroll-mt-24 px-4">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-800">Guia Interativo de Ingredientes</h2>
-            <p class="text-center text-base md:text-lg text-gray-600 max-w-3xl mx-auto mb-8 md:mb-12 leading-relaxed">Cada óleo e gordura confere propriedades únicas ao sabão. O segredo de uma boa receita está no equilíbrio. Use o gráfico abaixo para explorar como diferentes ingredientes afetam as características da barra final.</p>
-            <div class="section-card p-4 md:p-6 rounded-lg">
-                 <div class="chart-container">
-                    <canvas id="oilPropertiesChart"></canvas>
-                </div>
-            </div>
-        </section>
-        
-        <section id="receitas" class="mb-16 md:mb-24 scroll-mt-24 px-4">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-800">Receitas para Começar a Criar</h2>
-            <div class="space-y-4 max-w-4xl mx-auto" id="recipes-accordion"></div>
-        </section>
-
-        <section id="problemas" class="scroll-mt-24 px-4">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-800">Diagnóstico e Soluções</h2>
-             <div class="space-y-4 max-w-4xl mx-auto" id="troubleshooting-accordion"></div>
-        </section>
-
-    </main>
-
-    <footer class="bg-white mt-16 md:mt-24 border-t">
-        <div class="container mx-auto px-6 py-8 text-center text-gray-500">
-            <p>&copy; 2025 Portal da Saboaria Artesanal. Crie com conhecimento e segurança.</p>
         </div>
-    </footer>
 
-    <button id="back-to-top" aria-label="Voltar ao topo">↑</button>
+        <div class="section">
+            <h2>🔮 O Mistério Por Trás da Espuma</h2>
+            
+            <div class="mystery-box">
+                <h3 style="font-size: 1.8em; margin-bottom: 15px;">Quer saber o segredo?</h3>
+                <p style="font-size: 1.2em;">
+                    A espuma do Sapone Sereno contém micropartículas que massageiam suavemente sua pele,
+                    liberando aromas terapêuticos que mudam conforme a temperatura da água!
+                </p>
+            </div>
+
+            <div class="fun-fact">
+                <strong>💡 Curiosidade Incrível:</strong> Cada barra de Sapone Sereno passa por um processo 
+                de maturação de 45 dias, onde desenvolve suas propriedades únicas. É como um vinho fino, 
+                mas para sua pele!
+            </div>
+
+            <p style="font-size: 1.1em; line-height: 1.8; color: #555; margin-top: 25px;">
+                Nossos artesãos trabalham com técnicas milenares combinadas com ciência moderna. 
+                O resultado? Um sabão que <strong>hidrata enquanto limpa</strong>, deixa um 
+                <strong>perfume que dura horas</strong>, e ainda <strong>cuida da sua pele</strong> 
+                como nenhum outro produto consegue!
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>✨ Ingredientes Mágicos Revelados!</h2>
+            <p style="font-size: 1.1em; color: #555; margin-bottom: 20px;">
+                Prepare-se para conhecer os componentes extraordinários que tornam o Sapone Sereno único:
+            </p>
+            
+            <div class="ingredient-list">
+                <div class="ingredient">🥥 Óleo de Coco Virgem</div>
+                <div class="ingredient">🍯 Mel Orgânico</div>
+                <div class="ingredient">🌰 Manteiga de Karité</div>
+                <div class="ingredient">🌸 Essência de Lavanda</div>
+                <div class="ingredient">🌿 Aloe Vera Pura</div>
+                <div class="ingredient">✨ Ingrediente Secreto</div>
+            </div>
+
+            <div class="testimonial">
+                "Nunca imaginei que um sabão pudesse mudar minha rotina de banho completamente! 
+                É como se cada uso fosse uma experiência de spa. Minha pele nunca esteve tão macia 
+                e o aroma... ah, o aroma é simplesmente viciante!"
+                <br><br>
+                <strong>- Maria Silva, cliente apaixonada</strong>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Por Que Todos Estão Falando Sobre Isso?</h2>
+            
+            <div style="font-size: 1.1em; line-height: 1.8; color: #555;">
+                <p style="margin-bottom: 20px;">
+                    O Sapone Sereno se tornou um <strong>fenômeno viral</strong> por razões surpreendentes:
+                </p>
+                
+                <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0;">
+                    <h3 style="color: #764ba2; margin-bottom: 15px;">📱 Viralizou nas Redes!</h3>
+                    <p>
+                        Milhares de pessoas compartilham vídeos mostrando a espuma colorida e cremosa, 
+                        as cores hipnotizantes, e os resultados impressionantes na pele!
+                    </p>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0;">
+                    <h3 style="color: #764ba2; margin-bottom: 15px;">🔬 Comprovado Cientificamente</h3>
+                    <p>
+                        Dermatologistas confirmam: a fórmula única do Sapone Sereno realmente 
+                        regenera e protege a pele de forma extraordinária!
+                    </p>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0;">
+                    <h3 style="color: #764ba2; margin-bottom: 15px;">🎁 Presente Perfeito</h3>
+                    <p>
+                        Tornou-se o presente mais desejado! Quem recebe um Sapone Sereno 
+                        nunca mais quer usar outro sabão!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2 style="color: white; font-size: 2.5em; margin-bottom: 20px;">
+                Pronto Para Descobrir Mais? 🚀
+            </h2>
+            <p style="font-size: 1.3em; margin-bottom: 30px;">
+                Junte-se a milhares de pessoas que já transformaram sua rotina de cuidados!
+                <br><br>
+                <strong>Assista ao vídeo e veja a magia acontecer!</strong>
+            </p>
+            <a href="#" class="cta-button" onclick="alert('Obrigado pelo interesse! Em breve, mais novidades incríveis sobre o Sapone Sereno!')">
+                Quero Saber TUDO! →
+            </a>
+        </div>
+    </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Menu Mobile
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-
-            function setMenuState(open) {
-                if (open) {
-                    mobileMenu.classList.remove('hidden');
-                    localStorage.setItem('mobileMenuOpen', 'true');
-                } else {
-                    mobileMenu.classList.add('hidden');
-                    localStorage.setItem('mobileMenuOpen', 'false');
-                }
-            }
-
-            mobileMenuButton.addEventListener('click', () => {
-                const isOpen = !mobileMenu.classList.contains('hidden');
-                setMenuState(!isOpen);
-            });
-
-            if (localStorage.getItem('mobileMenuOpen') === 'true') {
-                mobileMenu.classList.remove('hidden');
-            } else {
-                mobileMenu.classList.add('hidden');
-            }
-
-            // Links navegação
-            const navLinks = document.querySelectorAll('.nav-link');
-            const sections = document.querySelectorAll('section[id]');
+        // Criar bolhas flutuantes
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            const size = Math.random() * 60 + 20;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.left = Math.random() * 100 + '%';
+            bubble.style.animationDelay = Math.random() * 5 + 's';
+            bubble.style.animationDuration = (Math.random() * 10 + 15) + 's';
             
-            function setActiveLink() {
-                let index = sections.length;
-                while(--index && window.scrollY + 100 < sections[index].offsetTop) {}
-                
-                navLinks.forEach((link) => link.classList.remove('active'));
-                
-                const activeLink = document.querySelector(`.nav-link[href="#${sections[index].id}"]`);
-                if(activeLink) {
-                    activeLink.classList.add('active');
-                }
-            }
+            document.querySelector('.floating-bubbles').appendChild(bubble);
+            
+            setTimeout(() => {
+                bubble.remove();
+            }, 20000);
+        }
 
-            setActiveLink();
-            window.addEventListener('scroll', setActiveLink);
+        // Criar bolhas periodicamente
+        setInterval(createBubble, 2000);
+        
+        // Criar bolhas iniciais
+        for(let i = 0; i < 5; i++) {
+            setTimeout(createBubble, i * 500);
+        }
 
-            navLinks.forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    mobileMenu.classList.add('hidden');
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+        // Animação de scroll suave
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) {
+                    target.scrollIntoView({
                         behavior: 'smooth'
                     });
-                });
-            });
-
-            // Gráfico Radar (Chart.js)
-            const oilData = {
-                labels: ['Dureza', 'Limpeza', 'Condicionamento', 'Espuma Borbulhante', 'Espuma Cremosa'],
-                datasets: [
-                    { label: 'Óleo de Coco', data: [9, 9, 1, 10, 2], fill: true, backgroundColor: 'rgba(255, 99, 132, 0.2)', borderColor: 'rgb(255, 99, 132)', pointBackgroundColor: 'rgb(255, 99, 132)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(255, 99, 132)' },
-                    { label: 'Azeite de Oliva', data: [1, 1, 9, 1, 8], fill: true, backgroundColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgb(75, 192, 192)', pointBackgroundColor: 'rgb(75, 192, 192)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(75, 192, 192)' },
-                    { label: 'Óleo de Palma', data: [8, 5, 5, 2, 9], fill: true, backgroundColor: 'rgba(255, 205, 86, 0.2)', borderColor: 'rgb(255, 205, 86)', pointBackgroundColor: 'rgb(255, 205, 86)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(255, 205, 86)' },
-                    { label: 'Banha de Porco', data: [8, 5, 8, 2, 8], fill: true, backgroundColor: 'rgba(201, 203, 207, 0.2)', borderColor: 'rgb(201, 203, 207)', pointBackgroundColor: 'rgb(201, 203, 207)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(201, 203, 207)' },
-                    { label: 'Manteiga de Karité', data: [5, 2, 9, 2, 5], fill: true, backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgb(54, 162, 235)', pointBackgroundColor: 'rgb(54, 162, 235)', pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: 'rgb(54, 162, 235)' }
-                ]
-            };
-
-            const chartCtx = document.getElementById('oilPropertiesChart').getContext('2d');
-            const oilPropertiesChart = new Chart(chartCtx, {
-                type: 'radar',
-                data: oilData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    elements: { line: { borderWidth: 3 } },
-                    scales: {
-                        r: {
-                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
-                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
-                            pointLabels: { 
-                                font: { size: 14, family: "'Inter', sans-serif" }, 
-                                color: '#4A4A4A' 
-                            },
-                            ticks: { 
-                                backdropColor: 'transparent', 
-                                stepSize: 2, 
-                                font: { size: 12, family: "'Inter', sans-serif" },
-                                color: '#4A4A4A'
-                            },
-                            min: 0,
-                            max: 10
-                        }
-                    },
-                    plugins: {
-                        legend: { 
-                            position: 'top', 
-                            labels: { 
-                                font: { size: 14, family: "'Inter', sans-serif" },
-                                color: '#4A4A4A'
-                            } 
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                            titleColor: '#4A4A4A',
-                            bodyColor: '#4A4A4A',
-                            borderColor: '#EAE0D5',
-                            borderWidth: 1,
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) { label += ': '; }
-                                    if (context.parsed.r !== null) { label += context.parsed.r.toFixed(1) + ' / 10'; }
-                                    return label;
-                                }
-                            }
-                        }
-                    }
                 }
             });
+        });
+
+        // Efeito parallax nas seções
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const sections = document.querySelectorAll('.section');
             
-            const recipes = [
-                {
-                    title: "O Pioneiro: Sabão Básico de Óleo de Cozinha",
-                    type: "Processo a Frio",
-                    description: "Perfeito para limpeza geral, esta é a receita ideal para iniciantes entenderem o processo de saponificação.",
-                    content: `
-                        <h4 class="font-bold text-lg mb-2">Ingredientes:</h4>
-                        <ul class="list-disc list-inside mb-4 text-gray-600 space-y-1">
-                            <li>4 L de óleo de cozinha usado (bem coado)</li>
-                            <li>240 g de soda cáustica (NaOH) 90-99%</li>
-                            <li>200 ml de água fria</li>
-                        </ul>
-                        <h4 class="font-bold text-lg mb-2">Passo a Passo:</h4>
-                        <ol class="list-decimal list-inside space-y-2 text-gray-600">
-                            <li><strong>Preparar a Lixívia:</strong> Com todo o EPI, num local ventilado, adicione LENTAMENTE a soda à água. Mexa até dissolver. A mistura aquecerá. Deixe arrefecer por 15-20 minutos.</li>
-                            <li><strong>Unir os Ingredientes:</strong> Despeje o óleo sobre a solução de soda arrefecida.</li>
-                            <li><strong>Atingir o Traço:</strong> Misture vigorosamente (com mixer ou manualmente) por 20-40 minutos até atingir a consistência de mingau (ponto de traço).</li>
-                            <li><strong>Moldar:</strong> Despeje a massa em formas forradas e cubra com um pano.</li>
-                            <li><strong>Descansar e Cortar:</strong> Deixe endurecer por 24-48 horas, desenforme e corte as barras.</li>
-                            <li><strong>Curar:</strong> Deixe as barras em local seco e arejado por 3 a 4 semanas antes de usar. Este passo é crucial para a segurança!</li>
-                        </ol>
-                    `
-                },
-                {
-                    title: "Toque de Luxo: Sabão Glicerinado",
-                    type: "Processo a Quente",
-                    description: "Uma receita que utiliza álcool e açúcar para criar uma barra translúcida e extra-hidratante.",
-                    content: `
-                        <h4 class="font-bold text-lg mb-2">Ingredientes:</h4>
-                        <ul class="list-disc list-inside mb-4 text-gray-600 space-y-1">
-                            <li>1 L de óleo de cozinha usado (coado)</li>
-                            <li>6 colheres de sopa de soda cáustica</li>
-                            <li>1 L de água</li>
-                            <li>800 ml de etanol (álcool de cereais)</li>
-                            <li>600 g de açúcar cristal</li>
-                        </ul>
-                        <h4 class="font-bold text-lg mb-2">Passo a Passo:</h4>
-                        <ol class="list-decimal list-inside space-y-2 text-gray-600">
-                            <li><strong>Preparar a Lixívia:</strong> Siga o passo 1 da receita anterior.</li>
-                            <li><strong>União Rápida:</strong> Adicione o óleo e o etanol à lixívia. O álcool acelera a reação, atingindo o traço rapidamente.</li>
-                            <li><strong>Calda de Açúcar:</strong> Numa panela separada, dissolva o açúcar num pouco de água e aqueça até formar uma calda.</li>
-                            <li><strong>Incorporar:</strong> Adicione a calda quente à mistura de sabão, mexendo bem.</li>
-                            <li><strong>Moldar e Curar:</strong> Despeje rapidamente nas formas. O processo de cura de 3 a 4 semanas continua a ser essencial.</li>
-                        </ol>
-                        <p class="mt-4 text-sm text-yellow-700 bg-yellow-100 p-2 rounded"><strong>Atenção:</strong> O uso de álcool de combustível de posto é perigoso e inadequado. Utilize apenas álcool de cereais de grau cosmético.</p>
-                    `
-                },
-                {
-                    title: "Abraço da Natureza: Erva-Doce e Limão",
-                    type: "Melt and Pour (Derreter e Verter)",
-                    description: "Um método seguro e sem manuseio de soda, perfeito para focar na criatividade, aromas e texturas.",
-                    content: `
-                        <h4 class="font-bold text-lg mb-2">Ingredientes:</h4>
-                        <ul class="list-disc list-inside mb-4 text-gray-600 space-y-1">
-                            <li>1 barra de sabão de coco de boa qualidade</li>
-                            <li>1 L de água</li>
-                            <li>50 g de erva-doce</li>
-                            <li>1 colher de sopa de sal</li>
-                            <li>Casca de 1 limão</li>
-                        </ul>
-                        <h4 class="font-bold text-lg mb-2">Passo a Passo:</h4>
-                        <ol class="list-decimal list-inside space-y-2 text-gray-600">
-                            <li><strong>Ralar o Sabão:</strong> Rale a barra de sabão de coco.</li>
-                            <li><strong>Fazer a Infusão:</strong> Ferva a água, adicione a erva-doce e a casca de limão. Desligue o fogo e deixe em infusão por 15 minutos.</li>
-                            <li><strong>Dissolver:</strong> Coe o líquido, volte ao fogo baixo, adicione o sabão ralado e o sal. Mexa até dissolver completamente.</li>
-                            <li><strong>Moldar:</strong> Despeje nas formas e deixe endurecer. Não necessita de um longo período de cura.</li>
-                        </ol>
-                    `
-                }
-            ];
-
-            const troubleshootingData = [
-                {
-                    title: "O sabão não endurece, está mole ou oleoso.",
-                    content: "<strong>Causa Provável:</strong> A causa mais comum é um erro de cálculo ou medição, resultando em soda cáustica insuficiente para a quantidade de óleo. Todas as medições devem ser feitas por peso (gramas) numa balança digital, não por volume.<br><br><strong>Solução (Reprocessamento):</strong> Rale o sabão mole, coloque numa panela em lume muito baixo (banho-maria é ideal) e cozinhe suavemente, mexendo ocasionalmente, até atingir uma consistência de gel. Este 'processo a quente' forçará a conclusão da saponificação. Depois, verta novamente no molde."
-                },
-                {
-                    title: "A mistura separou-se em camadas de óleo e líquido.",
-                    content: "<strong>Causa Provável:</strong> A mistura foi vertida no molde antes de atingir um 'traço' estável. A emulsão não se formou corretamente.<br><br><strong>Solução:</strong> Volte a colocar toda a mistura no recipiente original e continue a mexer vigorosamente com um mixer ou batedeira até que um traço espesso e estável seja alcançado. Depois, pode voltar a verter no molde."
-                },
-                {
-                    title: "Apareceu uma película branca e poeirenta no topo do sabão.",
-                    content: "<strong>Diagnóstico:</strong> Isto é 'cinza de soda' (carbonato de sódio), formada quando a soda na superfície reage com o dióxido de carbono do ar. É inofensiva e puramente estética.<br><br><strong>Prevenção/Solução:</strong> Pode ser evitada cobrindo o molde com película aderente nas primeiras 24 horas. Para remover, pode raspar suavemente ou passar um pano húmido sobre a barra já curada."
-                }
-            ];
-
-            function createAccordion(containerId, data, isRecipe = false) {
-                const container = document.getElementById(containerId);
-                container.innerHTML = '';
-                
-                data.forEach((item, index) => {
-                    const div = document.createElement('div');
-                    div.className = 'section-card rounded-lg overflow-hidden accordion-item';
-                    div.innerHTML = `
-                        <button class="w-full text-left p-4 md:p-6 flex justify-between items-center focus:outline-none accordion-button">
-                            <div class="flex-1">
-                                <h3 class="text-lg md:text-xl font-bold text-gray-800">${item.title}</h3>
-                                ${isRecipe && item.type ? `<span class="recipe-badge">${item.type}</span>` : ''}
-                                ${item.description ? `<p class="text-gray-600 mt-2 text-sm md:text-base">${item.description}</p>` : ''}
-                            </div>
-                            <span class="ml-4 transform transition-transform duration-300 text-2xl text-gray-500 accordion-icon">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </span>
-                        </button>
-                        <div class="accordion-content">
-                            <div class="p-4 md:p-6 border-t border-gray-200">${item.content}</div>
-                        </div>
-                    `;
-                    container.appendChild(div);
-                });
-
-                const items = container.querySelectorAll('.accordion-item');
-                const openIndex = localStorage.getItem(containerId + '-openIndex');
-
-                items.forEach((item, index) => {
-                    const button = item.querySelector('.accordion-button');
-                    const content = item.querySelector('.accordion-content');
-                    const icon = item.querySelector('.accordion-icon');
-
-                    if (openIndex == index) {
-                        item.classList.add('accordion-open');
-                        content.style.maxHeight = content.scrollHeight + 'px';
-                        icon.classList.add('rotate-180');
-                    }
-                    
-                    button.addEventListener('click', () => {
-                        const isOpen = item.classList.contains('accordion-open');
-                        
-                        items.forEach(el => {
-                            el.classList.remove('accordion-open');
-                            el.querySelector('.accordion-content').style.maxHeight = '0';
-                            el.querySelector('.accordion-icon').classList.remove('rotate-180');
-                        });
-                        
-                        if (!isOpen) {
-                            item.classList.add('accordion-open');
-                            content.style.maxHeight = content.scrollHeight + 'px';
-                            icon.classList.add('rotate-180');
-                            localStorage.setItem(containerId + '-openIndex', index);
-                        } else {
-                            localStorage.removeItem(containerId + '-openIndex');
-                        }
-                    });
-                });
-            }
-
-            createAccordion('recipes-accordion', recipes, true);
-            createAccordion('troubleshooting-accordion', troubleshootingData);
-
-            const backToTop = document.getElementById('back-to-top');
-
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 300) {
-                    backToTop.style.display = 'block';
-                } else {
-                    backToTop.style.display = 'none';
-                }
-            });
-
-            backToTop.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+            sections.forEach((section, index) => {
+                const speed = 0.5 + (index * 0.1);
+                section.style.transform = `translateY(${scrolled * speed * 0.1}px)`;
             });
         });
     </script>
