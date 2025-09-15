@@ -1,586 +1,353 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sapone Sereno - A Arte do Sabão que Transforma seu Banho</title>
+    <title>Sapone Sereno - Saboaria Artesanal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Georgia', serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
+            font-family: 'Lato', sans-serif;
+            background-color: #F5F0E1; /* Cor de fundo principal (bege claro) */
+            color: #1B2E25; /* Cor de texto principal (verde escuro) */
         }
-
-        .floating-bubbles {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 1;
+        h1, h2, h3, h4, h5, h6, .font-serif {
+            font-family: 'Playfair Display', serif;
         }
-
-        .bubble {
-            position: absolute;
-            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 100%);
-            border-radius: 50%;
-            animation: float 15s infinite ease-in-out;
-            opacity: 0.6;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(100vh) translateX(0) scale(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.6;
-            }
-            50% {
-                transform: translateY(-50vh) translateX(100px) scale(1);
-            }
-            90% {
-                opacity: 0.6;
-            }
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            position: relative;
-            z-index: 2;
-        }
-
-        header {
-            text-align: center;
-            padding: 60px 20px;
-            background: rgba(255,255,255,0.95);
-            border-radius: 30px;
-            margin-bottom: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-            animation: slideDown 1s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .logo {
-            font-size: 3.5em;
-            color: #764ba2;
-            margin-bottom: 10px;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            animation: pulse 3s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        .tagline {
-            font-size: 1.3em;
-            color: #666;
-            font-style: italic;
-            margin-bottom: 30px;
-        }
-
-        .hero-text {
-            font-size: 1.8em;
-            color: #333;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            animation: fadeIn 2s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        .highlight {
-            background: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: bold;
-        }
-
-        .section {
-            background: rgba(255,255,255,0.95);
-            border-radius: 25px;
-            padding: 40px;
-            margin-bottom: 30px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-            transform: translateY(30px);
-            opacity: 0;
-            animation: slideUp 1s ease-out forwards;
-        }
-
-        .section:nth-child(2) { animation-delay: 0.2s; }
-        .section:nth-child(3) { animation-delay: 0.4s; }
-        .section:nth-child(4) { animation-delay: 0.6s; }
-        .section:nth-child(5) { animation-delay: 0.8s; }
-
-        @keyframes slideUp {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        h2 {
-            color: #764ba2;
-            font-size: 2.2em;
-            margin-bottom: 20px;
-            position: relative;
-            padding-bottom: 15px;
-        }
-
-        h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            border-radius: 2px;
-            animation: expand 2s ease-out forwards;
-        }
-
-        @keyframes expand {
-            from {
-                width: 0;
-            }
-            to {
-                width: 60px;
-            }
-        }
-
-        .discovery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-
-        .discovery-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .discovery-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
-            transform: scale(0);
-            transition: transform 0.6s ease;
-        }
-
-        .discovery-card:hover::before {
-            transform: scale(1);
-        }
-
-        .discovery-card:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-
-        .icon {
-            font-size: 3em;
-            margin-bottom: 15px;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        .mystery-box {
-            background: linear-gradient(45deg, #f093fb, #f5576c);
-            padding: 30px;
-            border-radius: 20px;
-            color: white;
-            text-align: center;
-            margin: 30px 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .mystery-box::before {
-            content: '?';
-            position: absolute;
-            font-size: 200px;
-            opacity: 0.1;
-            right: -30px;
-            top: -50px;
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .ingredient-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 20px;
-            justify-content: center;
-        }
-
-        .ingredient {
-            background: white;
-            color: #764ba2;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .ingredient:hover {
-            transform: scale(1.1);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            background: #764ba2;
-            color: white;
-        }
-
-        .cta-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-align: center;
-            padding: 60px 40px;
-            border-radius: 30px;
-            margin-top: 50px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-section::before {
-            content: '';
+        .hero-video-container {
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,133.3C672,117,768,107,864,122.7C960,139,1056,181,1152,186.7C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
-            background-size: cover;
-            opacity: 0.3;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
         }
-
-        .cta-button {
-            display: inline-block;
-            background: white;
-            color: #764ba2;
-            padding: 18px 40px;
-            border-radius: 50px;
-            font-size: 1.2em;
-            font-weight: bold;
-            text-decoration: none;
+        .hero-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .header-scrolled {
+            background-color: rgba(27, 46, 37, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .gold-text {
+            color: #C9A959;
+        }
+        .btn-outline {
+            border: 2px solid #C9A959;
+            color: #C9A959;
             transition: all 0.3s ease;
-            margin-top: 20px;
+        }
+        .btn-outline:hover {
+            background-color: #C9A959;
+            color: #1B2E25;
+        }
+        .tab-button {
+            padding: 1rem 0;
+            background: none;
+            border: none;
+            color: #F5F0E1;
+            opacity: 0.6;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            cursor: pointer;
             position: relative;
-            z-index: 1;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: opacity 0.3s ease;
         }
-
-        .cta-button:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        .tab-button:hover {
+            opacity: 1;
         }
-
-        .fun-fact {
-            background: #f8f9fa;
-            border-left: 5px solid #764ba2;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 10px;
-            position: relative;
-            animation: slideInLeft 1s ease-out;
+        .tab-button.active {
+            opacity: 1;
+            font-weight: bold;
         }
-
-        @keyframes slideInLeft {
-            from {
-                transform: translateX(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .testimonial {
-            font-style: italic;
-            font-size: 1.1em;
-            color: #555;
-            padding: 25px;
-            background: #f8f9fa;
-            border-radius: 15px;
-            margin: 20px 0;
-            position: relative;
-        }
-
-        .testimonial::before {
-            content: '"';
-            font-size: 4em;
-            color: #764ba2;
-            opacity: 0.3;
+        .tab-button.active::after {
+            content: '';
             position: absolute;
-            top: -10px;
-            left: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .logo {
-                font-size: 2.5em;
-            }
-            .hero-text {
-                font-size: 1.4em;
-            }
-            h2 {
-                font-size: 1.8em;
-            }
+            bottom: -2px; /* Alinha com a borda */
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #C9A959;
         }
     </style>
 </head>
-<body>
-    <div class="floating-bubbles"></div>
-    
-    <div class="container">
-        <header>
-            <div class="logo">Sapone Sereno</div>
-            <div class="tagline">✨ Onde a Magia Encontra a Limpeza ✨</div>
-            <div class="hero-text">
-                Imagine um sabão que não apenas limpa, mas <span class="highlight">transforma cada banho em uma experiência única</span>...
-                <br><br>
-                Um segredo guardado por gerações, agora revelado para você!
-            </div>
-        </header>
+<body class="bg-[#F5F0E1]">
 
-        <div class="section">
-            <h2>🌟 Uma Descoberta Fascinante!</h2>
-            <p style="font-size: 1.2em; line-height: 1.8; color: #555;">
-                Você sabia que existe um sabão capaz de despertar sensações que você nem sabia que existiam? 
-                O Sapone Sereno não é apenas um produto de limpeza - é uma <strong>revolução sensorial</strong> 
-                que está conquistando pessoas ao redor do mundo!
-            </p>
-            
-            <div class="discovery-grid">
-                <div class="discovery-card">
-                    <div class="icon">🌿</div>
-                    <h3>100% Natural</h3>
-                    <p>Ingredientes secretos da natureza que vão te surpreender!</p>
-                </div>
-                <div class="discovery-card">
-                    <div class="icon">💎</div>
-                    <h3>Fórmula Exclusiva</h3>
-                    <p>Uma receita que levou anos para ser aperfeiçoada</p>
-                </div>
-                <div class="discovery-card">
-                    <div class="icon">🌈</div>
-                    <h3>Cores que Hipnotizam</h3>
-                    <p>Cada barra é uma obra de arte única</p>
-                </div>
-            </div>
+    <!-- Cabeçalho -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#home" class="text-2xl font-bold font-serif text-white">Sapone Sereno</a>
+            <nav class="hidden md:flex space-x-8 items-center text-white">
+                <a href="#story" class="hover:text-[#C9A959] transition-colors">Nossa História</a>
+                <a href="#product" class="hover:text-[#C9A959] transition-colors">O Produto</a>
+                <a href="#process" class="hover:text-[#C9A959] transition-colors">O Processo</a>
+                <a href="#gallery" class="hover:text-[#C9A959] transition-colors">Galeria</a>
+                <a href="#contact" class="hover:text-[#C9A959] transition-colors">Contato</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-2xl text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
         </div>
+         <!-- Menu Mobile -->
+        <div id="mobile-menu" class="hidden md:hidden bg-[#1B2E25]/95 backdrop-blur-sm px-6 pb-4">
+            <a href="#home" class="block text-white py-2 text-center">Início</a>
+            <a href="#story" class="block text-white py-2 text-center">Nossa História</a>
+            <a href="#product" class="block text-white py-2 text-center">O Produto</a>
+            <a href="#process" class="block text-white py-2 text-center">O Processo</a>
+            <a href="#gallery" class="block text-white py-2 text-center">Galeria</a>
+            <a href="#contact" class="block text-white py-2 text-center">Contato</a>
+        </div>
+    </header>
 
-        <div class="section">
-            <h2>🔮 O Mistério Por Trás da Espuma</h2>
-            
-            <div class="mystery-box">
-                <h3 style="font-size: 1.8em; margin-bottom: 15px;">Quer saber o segredo?</h3>
-                <p style="font-size: 1.2em;">
-                    A espuma do Sapone Sereno contém micropartículas que massageiam suavemente sua pele,
-                    liberando aromas terapêuticos que mudam conforme a temperatura da água!
+    <main>
+        <!-- Seção Home (Hero com Vídeo) -->
+        <section id="home" class="relative h-screen flex items-center justify-center text-center text-white">
+            <div class="hero-video-container">
+                <video class="hero-video" autoplay loop muted playsinline poster="https://placehold.co/1920x1080/1B2E25/F5F0E1?text=Sapone+Sereno">
+                    <source src="https://videos.pexels.com/video-files/853877/853877-hd_1920_1080_25fps.mp4" type="video/mp4">
+                    Seu navegador não suporta vídeos.
+                </video>
+                <div class="absolute inset-0 bg-black/50"></div>
+            </div>
+            <div class="relative z-10 p-4">
+                <h1 class="text-5xl md:text-7xl font-thin italic mb-4">A Beleza Pura que Transforma</h1>
+                <p class="text-lg md:text-xl max-w-2xl mx-auto mb-8 font-light">
+                    Feito à mão, com ingredientes simples e um propósito grandioso.
                 </p>
+                <a href="#product" class="btn-outline font-bold uppercase tracking-widest px-8 py-3 rounded-sm text-sm">
+                    Descubra o S.S.
+                </a>
             </div>
+        </section>
 
-            <div class="fun-fact">
-                <strong>💡 Curiosidade Incrível:</strong> Cada barra de Sapone Sereno passa por um processo 
-                de maturação de 45 dias, onde desenvolve suas propriedades únicas. É como um vinho fino, 
-                mas para sua pele!
+        <!-- Seção Nossa História (Escuro) -->
+        <section id="story" class="py-20 md:py-32 bg-[#1B2E25] text-[#F5F0E1] fade-in-section">
+            <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+                <div class="order-2 md:order-1">
+                    <h2 class="text-4xl md:text-5xl mb-6">Das Nossas Mãos <br class="hidden md:block"/><span class="gold-text italic">para as Suas</span></h2>
+                    <p class="mb-4 font-light leading-relaxed">
+                        "Sapone Sereno" nasceu da crença de que o verdadeiro luxo está na simplicidade e no respeito. Cansados de ver o impacto negativo do descarte inadequado de óleo, decidimos agir.
+                    </p>
+                    <p class="font-light leading-relaxed">
+                        Cada barra de S.S. é um pedaço da nossa paixão e um convite para você se juntar a nós nesse movimento de cuidado e sustentabilidade.
+                    </p>
+                </div>
+                <div class="order-1 md:order-2">
+                    <img src="https://placehold.co/600x700/F5F0E1/1B2E25?text=Artesanal" alt="Processo artesanal de fabricação de sabão" class="rounded-sm shadow-2xl w-full">
+                </div>
             </div>
+        </section>
 
-            <p style="font-size: 1.1em; line-height: 1.8; color: #555; margin-top: 25px;">
-                Nossos artesãos trabalham com técnicas milenares combinadas com ciência moderna. 
-                O resultado? Um sabão que <strong>hidrata enquanto limpa</strong>, deixa um 
-                <strong>perfume que dura horas</strong>, e ainda <strong>cuida da sua pele</strong> 
-                como nenhum outro produto consegue!
-            </p>
-        </div>
-
-        <div class="section">
-            <h2>✨ Ingredientes Mágicos Revelados!</h2>
-            <p style="font-size: 1.1em; color: #555; margin-bottom: 20px;">
-                Prepare-se para conhecer os componentes extraordinários que tornam o Sapone Sereno único:
-            </p>
-            
-            <div class="ingredient-list">
-                <div class="ingredient">🥥 Óleo de Coco Virgem</div>
-                <div class="ingredient">🍯 Mel Orgânico</div>
-                <div class="ingredient">🌰 Manteiga de Karité</div>
-                <div class="ingredient">🌸 Essência de Lavanda</div>
-                <div class="ingredient">🌿 Aloe Vera Pura</div>
-                <div class="ingredient">✨ Ingrediente Secreto</div>
+        <!-- Seção O Produto (Claro) -->
+        <section id="product" class="py-20 md:py-32 bg-[#F5F0E1] text-[#1B2E25] fade-in-section">
+            <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                     <img src="https://placehold.co/600x700/1B2E25/F5F0E1?text=S.S." alt="Barra de sabão S.S. em destaque" class="rounded-sm shadow-2xl w-full">
+                </div>
+                <div>
+                    <h2 class="text-4xl md:text-5xl mb-6">Simples, Sustentável,<br class="hidden md:block"/> <span class="italic">Sublime.</span></h2>
+                    <p class="mb-6 font-light leading-relaxed">
+                        O S.S. é mais do que um sabão. É uma experiência. Com uma espuma rica e uma limpeza eficaz, ele cuida da sua pele enquanto você cuida do mundo, graças à sua fórmula artesanal.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <span class="gold-text text-xl mr-4">🌿</span>
+                            <p><strong>Eco-friendly:</strong> Participe da reciclagem de óleo e ajude a proteger nossos rios.</p>
+                        </div>
+                         <div class="flex items-start">
+                            <span class="gold-text text-xl mr-4">✨</span>
+                            <p><strong>Limpeza Profunda:</strong> Remove a sujeira de forma eficaz, deixando uma sensação de pureza.</p>
+                        </div>
+                         <div class="flex items-start">
+                            <span class="gold-text text-xl mr-4">🙌</span>
+                            <p><strong>Artesanal e Único:</strong> Curado por 4 semanas para garantir máxima qualidade e um toque autêntico.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </section>
 
-            <div class="testimonial">
-                "Nunca imaginei que um sabão pudesse mudar minha rotina de banho completamente! 
-                É como se cada uso fosse uma experiência de spa. Minha pele nunca esteve tão macia 
-                e o aroma... ah, o aroma é simplesmente viciante!"
-                <br><br>
-                <strong>- Maria Silva, cliente apaixonada</strong>
+        <!-- Seção O Processo (Escuro) - NOVA SEÇÃO -->
+        <section id="process" class="py-20 md:py-32 bg-[#1B2E25] text-[#F5F0E1] fade-in-section">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl md:text-5xl mb-4">A Alquimia da <span class="gold-text italic">Nossa Criação</span></h2>
+                    <p class="max-w-3xl mx-auto font-light">
+                        Descubra o processo artesanal e os ingredientes que dão vida ao S.S., um sabão que é pura transformação.
+                    </p>
+                </div>
+
+                <div class="max-w-4xl mx-auto">
+                    <!-- Abas de Navegação -->
+                    <div class="border-b border-gray-700 mb-8 flex justify-center space-x-4 md:space-x-8">
+                        <button class="tab-button active" data-tab="ingredients">Ingredientes</button>
+                        <button class="tab-button" data-tab="preparation">Preparo</button>
+                        <button class="tab-button" data-tab="alchemy">A Alquimia</button>
+                    </div>
+
+                    <!-- Conteúdo das Abas -->
+                    <div id="ingredients" class="tab-content font-light leading-relaxed">
+                        <p class="text-center mb-6">Nossa receita une o poder da natureza com a sabedoria da tradição.</p>
+                        <ul class="list-disc list-inside text-center mx-auto max-w-md space-y-2">
+                            <li>7 litros de Água</li>
+                            <li>1kg de Soda Cáustica 99%</li>
+                            <li>4 litros de Óleo de Cozinha Reciclado</li>
+                            <li>2 litros de Sebo</li>
+                            <li>1 copo de Açúcar</li>
+                            <li>1 copo de Fubá</li>
+                            <li>1 copo de Desinfetante (Fragrância)</li>
+                        </ul>
+                    </div>
+                    <div id="preparation" class="tab-content hidden font-light leading-relaxed">
+                        <ol class="list-decimal list-inside space-y-4 max-w-2xl mx-auto">
+                            <li><strong>Segurança em Primeiro Lugar:</strong> Use sempre equipamentos de proteção (luvas, óculos, máscara e avental). O manuseio da soda cáustica exige máximo cuidado.</li>
+                            <li><strong>A Base:</strong> Em um balde grande e resistente, dissolva o açúcar, o fubá e o desinfetante na água.</li>
+                            <li><strong>O Momento Crítico:</strong> Com muito cuidado, adicione a soda cáustica à mistura, mexendo lentamente com uma pá de madeira até dissolver. A mistura irá aquecer; mantenha distância e evite inalar os vapores.</li>
+                            <li><strong>A União:</strong> Adicione o óleo e o sebo (previamente derretido) e continue mexendo, sempre na mesma direção, até a mistura atingir o "ponto de traço" (quando fica espessa como um doce de leite).</li>
+                            <li><strong>O Descanso:</strong> Despeje a mistura em formas e deixe descansar por 24 horas.</li>
+                            <li><strong>A Cura:</strong> Após desenformar e cortar em barras, o sabão precisa "curar" em um local seco e arejado por 4 semanas. Esse tempo é essencial para finalizar a saponificação e garantir a qualidade e segurança do produto.</li>
+                        </ol>
+                    </div>
+                    <div id="alchemy" class="tab-content hidden font-light leading-relaxed">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="text-2xl gold-text italic mb-2">Óleos e Gorduras</h4>
+                                <p>São a alma do sabão. O óleo reciclado e o sebo reagem com a soda cáustica no processo de saponificação, se transformando em sabão e glicerina, um umectante natural que cuida da sua pele.</p>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl gold-text italic mb-2">Soda Cáustica</h4>
+                                <p>É o agente mágico, o catalisador que quebra as moléculas de gordura e as transforma. Ao final do processo de cura, ela é completamente neutralizada, resultando em um sabão suave e seguro.</p>
+                            </div>
+                            <div class="md:col-span-2 text-center pt-4">
+                                <h4 class="text-2xl gold-text italic mb-2">Aditivos Naturais</h4>
+                                <p>O açúcar ajuda a potencializar a espuma, tornando-a mais rica e cremosa. O fubá, por sua vez, adiciona uma leve e agradável propriedade esfoliante à barra, renovando a pele a cada uso.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="section">
-            <h2>🎯 Por Que Todos Estão Falando Sobre Isso?</h2>
-            
-            <div style="font-size: 1.1em; line-height: 1.8; color: #555;">
-                <p style="margin-bottom: 20px;">
-                    O Sapone Sereno se tornou um <strong>fenômeno viral</strong> por razões surpreendentes:
+        </section>
+        
+        <!-- Seção Galeria (Claro) -->
+        <section id="gallery" class="py-20 md:py-32 bg-[#F5F0E1] text-[#1B2E25] fade-in-section">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl md:text-5xl mb-4">A Beleza da <span class="italic">Imperfeição Perfeita</span></h2>
+                 <p class="max-w-2xl mx-auto mb-12 font-light">
+                    Cada barra é única. Sinta com os olhos a serenidade que queremos levar até você.
                 </p>
-                
-                <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0;">
-                    <h3 style="color: #764ba2; margin-bottom: 15px;">📱 Viralizou nas Redes!</h3>
-                    <p>
-                        Milhares de pessoas compartilham vídeos mostrando a espuma colorida e cremosa, 
-                        as cores hipnotizantes, e os resultados impressionantes na pele!
-                    </p>
-                </div>
-
-                <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0;">
-                    <h3 style="color: #764ba2; margin-bottom: 15px;">🔬 Comprovado Cientificamente</h3>
-                    <p>
-                        Dermatologistas confirmam: a fórmula única do Sapone Sereno realmente 
-                        regenera e protege a pele de forma extraordinária!
-                    </p>
-                </div>
-
-                <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0;">
-                    <h3 style="color: #764ba2; margin-bottom: 15px;">🎁 Presente Perfeito</h3>
-                    <p>
-                        Tornou-se o presente mais desejado! Quem recebe um Sapone Sereno 
-                        nunca mais quer usar outro sabão!
-                    </p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <img src="https://placehold.co/400x500/1B2E25/F5F0E1?text=S.S." alt="Galeria de Sabão 1" class="w-full h-full object-cover rounded-sm transform hover:scale-105 transition-transform duration-300">
+                    <img src="https://placehold.co/400x500/C9A959/1B2E25?text=S.S." alt="Galeria de Sabão 2" class="w-full h-full object-cover rounded-sm transform hover:scale-105 transition-transform duration-300">
+                    <img src="https://placehold.co/400x500/BDB090/1B2E25?text=S.S." alt="Galeria de Sabão 3" class="w-full h-full object-cover rounded-sm transform hover:scale-105 transition-transform duration-300">
+                    <img src="https://placehold.co/400x500/1B2E25/F5F0E1?text=S.S." alt="Galeria de Sabão 4" class="w-full h-full object-cover rounded-sm transform hover:scale-105 transition-transform duration-300">
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="cta-section">
-            <h2 style="color: white; font-size: 2.5em; margin-bottom: 20px;">
-                Pronto Para Descobrir Mais? 🚀
-            </h2>
-            <p style="font-size: 1.3em; margin-bottom: 30px;">
-                Junte-se a milhares de pessoas que já transformaram sua rotina de cuidados!
-                <br><br>
-                <strong>Assista ao vídeo e veja a magia acontecer!</strong>
-            </p>
-            <a href="#" class="cta-button" onclick="alert('Obrigado pelo interesse! Em breve, mais novidades incríveis sobre o Sapone Sereno!')">
-                Quero Saber TUDO! →
-            </a>
+        <!-- Seção Contato (Escuro) -->
+        <section id="contact" class="py-20 md:py-32 bg-[#1B2E25] text-[#F5F0E1] fade-in-section">
+            <div class="container mx-auto px-6 text-center max-w-3xl">
+                <h2 class="text-4xl md:text-5xl mb-4">Faça Parte <span class="gold-text italic">da Mudança</span></h2>
+                <p class="mb-8 font-light leading-relaxed">
+                    Adorou o que viu? Quer saber mais, fazer um pedido ou simplesmente compartilhar suas ideias sobre sustentabilidade? Vamos adorar ouvir você!
+                </p>
+                 <a href="mailto:contato@saponesereno.com" class="btn-outline font-bold uppercase tracking-widest px-8 py-3 rounded-sm text-sm">
+                    Enviar Mensagem
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="bg-[#1B2E25] border-t border-gray-700 text-[#F5F0E1] py-8">
+        <div class="container mx-auto px-6 text-center font-light">
+            <p>&copy; 2024 Sapone Sereno.</p>
+            <p class="text-sm text-gray-400 mt-1">Feito com amor e respeito pela natureza.</p>
         </div>
-    </div>
+    </footer>
 
     <script>
-        // Criar bolhas flutuantes
-        function createBubble() {
-            const bubble = document.createElement('div');
-            bubble.className = 'bubble';
-            const size = Math.random() * 60 + 20;
-            bubble.style.width = size + 'px';
-            bubble.style.height = size + 'px';
-            bubble.style.left = Math.random() * 100 + '%';
-            bubble.style.animationDelay = Math.random() * 5 + 's';
-            bubble.style.animationDuration = (Math.random() * 10 + 15) + 's';
-            
-            document.querySelector('.floating-bubbles').appendChild(bubble);
-            
-            setTimeout(() => {
-                bubble.remove();
-            }, 20000);
-        }
-
-        // Criar bolhas periodicamente
-        setInterval(createBubble, 2000);
-        
-        // Criar bolhas iniciais
-        for(let i = 0; i < 5; i++) {
-            setTimeout(createBubble, i * 500);
-        }
-
-        // Animação de scroll suave
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if(target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth'
-                    });
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lógica para o header mudar de cor no scroll
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('header-scrolled');
+                } else {
+                    header.classList.remove('header-scrolled');
                 }
             });
-        });
 
-        // Efeito parallax nas seções
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const sections = document.querySelectorAll('.section');
+            // Lógica para o menu mobile
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
             
-            sections.forEach((section, index) => {
-                const speed = 0.5 + (index * 0.1);
-                section.style.transform = `translateY(${scrolled * speed * 0.1}px)`;
+            // Lógica para fechar o menu mobile ao clicar em um link
+            const mobileLinks = mobileMenu.getElementsByTagName('a');
+            for(let link of mobileLinks) {
+                link.addEventListener('click', () => {
+                     mobileMenu.classList.add('hidden');
+                });
+            }
+
+            // Lógica para animação de fade-in ao rolar
+            const sections = document.querySelectorAll('.fade-in-section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Lógica para as abas da seção "O Processo"
+            const tabs = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = document.getElementById(tab.dataset.tab);
+
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    tabContents.forEach(content => {
+                        if (!content.classList.contains('hidden')) {
+                            content.classList.add('hidden');
+                        }
+                    });
+
+                    target.classList.remove('hidden');
+                });
             });
         });
     </script>
 </body>
 </html>
+
+
